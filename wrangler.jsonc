@@ -1,0 +1,38 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"main": ".open-next/worker.js",
+	"name": "cf-edge-blog",
+	"compatibility_date": "2025-05-01",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"services": [
+		{
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "cf-edge-blog"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "cf-edge-blog-db",
+			"database_id": "76fd0a58-5ec1-4a00-a97e-b9e03728c822"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "AVATAR_R2",
+			"bucket_name": "images"
+		}
+	],
+	"vars": {
+		"NEXT_PUBLIC_SITE_URL": "https://docs.altriayu.uk",
+		"NEXT_PUBLIC_AVATAR_BASE_URL": "https://images.altriayu.uk",
+		"NEXT_PUBLIC_TURNSTILE_SITE_KEY": "replace-with-your-turnstile-site-key"
+	}
+}

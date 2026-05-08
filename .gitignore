@@ -17,8 +17,14 @@
 /.next/
 /out/
 
+# OpenNext → Cloudflare Workers build output
+/.open-next/
+
 # production
 /build
+
+# Cloudflare Wrangler (local D1 state, Miniflare caches, dev registry logs)
+.wrangler/
 
 # misc
 .DS_Store
@@ -30,12 +36,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env & secrets (Wrangler uses .dev.vars alongside .env)
 .env*
+!.env.example
+.dev.vars
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts

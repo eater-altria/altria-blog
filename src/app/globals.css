@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05070d;
+  --foreground: #eaf2ff;
+  --surface: #0a1020cc;
+  --surface-strong: #0f1730;
+  --surface-border: #1f2d52;
+  --muted: #9cb3d9;
+  --neon-cyan: #00f5ff;
+  --neon-magenta: #ff2bd6;
+  --neon-violet: #7a5cff;
+  --danger: #ff5f87;
 }
 
 @theme inline {
@@ -14,13 +22,118 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #05070d;
+    --foreground: #eaf2ff;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: #05070d;
+  background-image:
+    radial-gradient(70% 55% at 18% 12%, rgba(0, 245, 255, 0.10) 0%, transparent 65%),
+    radial-gradient(70% 55% at 82% 88%, rgba(255, 43, 214, 0.09) 0%, transparent 65%),
+    linear-gradient(
+      180deg,
+      #05070d 0%,
+      #0a1a2d 25%,
+      #05070d 50%,
+      #0a1a2d 75%,
+      #05070d 100%
+    );
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+a {
+  transition: color 200ms ease, text-shadow 200ms ease;
+}
+
+.cyber-panel {
+  border: 1px solid var(--surface-border);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(12, 19, 39, 0.94), rgba(9, 14, 30, 0.88));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 0 0 1px rgba(0, 245, 255, 0.08),
+    0 12px 34px rgba(1, 8, 22, 0.56);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.cyber-chip {
+  border: 1px solid rgba(0, 245, 255, 0.42);
+  border-radius: 999px;
+  background: rgba(0, 245, 255, 0.08);
+  color: var(--foreground);
+  box-shadow: 0 0 18px rgba(0, 245, 255, 0.2);
+}
+
+.cyber-title {
+  color: #ebf3ff;
+  text-shadow:
+    0 0 8px rgba(0, 245, 255, 0.58),
+    0 0 18px rgba(255, 43, 214, 0.3);
+}
+
+.cyber-muted {
+  color: var(--muted);
+}
+
+.cyber-link {
+  color: var(--foreground);
+}
+
+.cyber-link:hover {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 245, 255, 0.55);
+}
+
+.cyber-input {
+  border: 1px solid rgba(0, 245, 255, 0.35);
+  border-radius: 0.7rem;
+  background: rgba(8, 13, 29, 0.95);
+  color: var(--foreground);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.cyber-input:focus {
+  outline: none;
+  border-color: rgba(0, 245, 255, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 255, 0.85),
+    0 0 14px rgba(0, 245, 255, 0.4);
+}
+
+.cyber-button {
+  border: 1px solid rgba(0, 245, 255, 0.6);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 245, 255, 0.16), rgba(122, 92, 255, 0.2));
+  color: #f6fbff;
+  box-shadow:
+    0 0 10px rgba(0, 245, 255, 0.45),
+    inset 0 0 0 1px rgba(0, 245, 255, 0.35);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.cyber-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 43, 214, 0.75);
+  box-shadow:
+    0 0 12px rgba(0, 245, 255, 0.5),
+    0 0 22px rgba(255, 43, 214, 0.35);
+}
+
+.cyber-button-secondary {
+  border: 1px solid rgba(255, 43, 214, 0.58);
+  border-radius: 999px;
+  background: rgba(255, 43, 214, 0.08);
+  color: var(--foreground);
+  box-shadow: 0 0 14px rgba(255, 43, 214, 0.2);
+}
+
+.cyber-danger {
+  color: var(--danger);
 }
