@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDb } from "@/db";
 import { listPublishedPostCards } from "@/lib/blog";
 import { PostCard } from "@/components/site/PostCard";
+import { Reveal } from "@/components/motion/Reveal";
 
 export default async function Home() {
   const db = await getDb();
@@ -16,7 +17,7 @@ export default async function Home() {
   return (
     <div className="space-y-16">
       <section className="grid gap-10 border-b border-[var(--line-soft)] pb-14 lg:grid-cols-[minmax(0,1.35fr)_18rem] lg:items-end">
-        <div className="space-y-6">
+        <Reveal className="space-y-6">
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-[var(--muted-strong)]">
             Personal blog
           </p>
@@ -38,23 +39,23 @@ export default async function Home() {
               RSS 订阅
             </Link>
           </div>
-        </div>
+        </Reveal>
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-          <div className="surface-card p-5">
+          <Reveal className="surface-card p-5" delay={1}>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-strong)]">已发布</p>
             <p className="mt-3 text-3xl font-semibold">{publishedPosts.length}</p>
             <p className="mt-2 text-sm leading-7 text-[var(--muted)]">所有公开文章都会在这里长期归档。</p>
-          </div>
-          <div className="surface-card p-5">
+          </Reveal>
+          <Reveal className="surface-card p-5" delay={2}>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-strong)]">关注主题</p>
             <p className="mt-3 text-xl font-semibold">Engineering · AI</p>
             <p className="mt-2 text-sm leading-7 text-[var(--muted)]">也会穿插产品观察和一点生活记录。</p>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.25fr)_20rem]">
-        <div className="space-y-6">
+        <Reveal className="space-y-6">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
@@ -81,9 +82,9 @@ export default async function Home() {
               还没有已发布文章。等第一篇上线之后，这里会变成一张很完整的阅读首页。
             </div>
           ) : null}
-        </div>
+        </Reveal>
 
-        <aside className="space-y-6">
+        <Reveal as="aside" className="space-y-6" delay={1}>
           <div className="surface-card p-6">
             <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
               Popular
@@ -113,43 +114,35 @@ export default async function Home() {
               如果你也在折腾 AI、工程、产品，或者只是想偶尔读点真实工作里的感受，欢迎来这里看看。
             </p>
           </div>
-        </aside>
+        </Reveal>
       </section>
 
       <section className="grid gap-6 border-t border-[var(--line-soft)] pt-10 md:grid-cols-3">
-        <div>
+        <Reveal>
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
             Writing rhythm
           </p>
           <p className="mt-3 text-sm leading-8 text-[var(--muted)]">
             这里会持续记录工程实践、AI 工具、产品观察，还有一些值得慢慢写下来的日常想法。
           </p>
-        </div>
-        <div>
+        </Reveal>
+        <Reveal delay={1}>
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
             Reading mood
           </p>
           <p className="mt-3 text-sm leading-8 text-[var(--muted)]">
             我希望这里的文章读起来是安静的、完整的，不急着下结论，也不把思考压缩成只有结尾的摘要。
           </p>
-        </div>
-        <div>
+        </Reveal>
+        <Reveal delay={2}>
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
             Small conversations
           </p>
           <p className="mt-3 text-sm leading-8 text-[var(--muted)]">
             如果某篇文章刚好也碰到了你的经验或情绪，欢迎留下几句回应，让这里慢慢长出一点交流感。
           </p>
-        </div>
+        </Reveal>
       </section>
-      <div className="flex flex-wrap gap-3 text-sm">
-        <Link className="button-secondary px-4 py-2.5" href="/login">
-          已有账号，去登录
-        </Link>
-        <Link className="button-secondary px-4 py-2.5" href="/register">
-          注册账号
-        </Link>
-      </div>
     </div>
   );
 }

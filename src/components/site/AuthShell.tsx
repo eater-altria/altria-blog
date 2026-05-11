@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/motion/Reveal";
 
 type AuthShellProps = {
   eyebrow: string;
@@ -17,7 +18,7 @@ export function AuthShell({
 }: AuthShellProps) {
   return (
     <section className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(22rem,26rem)] lg:items-start">
-      <div className="space-y-6 pt-3">
+      <Reveal className="space-y-6 pt-3">
         <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
           {eyebrow}
         </p>
@@ -41,13 +42,13 @@ export function AuthShell({
             </p>
           </div>
         </div>
-      </div>
-      <div className="surface-card p-2">
+      </Reveal>
+      <Reveal className="surface-card p-2" delay={1}>
         <div className="rounded-[1.4rem] border border-[var(--line-soft)] bg-[var(--surface-strong)] p-6 sm:p-8">
           {children}
           {footer ? <div className="mt-6 text-center text-sm text-[var(--muted)]">{footer}</div> : null}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

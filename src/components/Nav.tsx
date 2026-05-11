@@ -7,7 +7,7 @@ export const Nav = async () => {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--line-soft)] bg-[rgba(244,239,230,0.86)] backdrop-blur">
+    <header className="nav-enter sticky top-0 z-30 border-b border-[var(--line-soft)] bg-[rgba(244,239,230,0.86)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="flex min-w-0 flex-col">
           <span className="text-xs font-medium uppercase tracking-[0.28em] text-[var(--muted-strong)]">

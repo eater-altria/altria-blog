@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
+import { Reveal } from "@/components/motion/Reveal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,7 @@ export default function RootLayout({
         <Nav />
         <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col px-4 sm:px-6">
           <main className="flex-1 py-10 sm:py-12">{children}</main>
-          <footer className="border-t border-[var(--line-soft)] py-6 text-sm text-[var(--muted)]">
+          <Reveal as="footer" className="border-t border-[var(--line-soft)] py-6 text-sm text-[var(--muted)]">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p>Altria Journal</p>
               <div className="flex flex-wrap items-center gap-4">
@@ -50,7 +51,7 @@ export default function RootLayout({
                 </a>
               </div>
             </div>
-          </footer>
+          </Reveal>
         </div>
       </body>
     </html>

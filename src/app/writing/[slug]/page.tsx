@@ -14,6 +14,7 @@ import {
 import { markdownToTrustedArticle } from "@/lib/render-post";
 import { ArticleTocProgress } from "@/components/post/ArticleTocProgress";
 import { ArticleCommentSection } from "@/components/post/ArticleCommentSection";
+import { Reveal } from "@/components/motion/Reveal";
 import { getSkipCommentTurnstileForUser } from "@/lib/comment-turnstile-bypass-rsc";
 import { getTurnstileSiteKey } from "@/lib/public-env";
 import type { FlatComment } from "@/lib/comment-thread";
@@ -71,12 +72,14 @@ export default async function WritingDetailPage({ params }: PageProps) {
 
   return (
     <article className="space-y-10">
-      <Link className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent)]" href="/writing">
-        <span aria-hidden>←</span>
-        返回文章归档
-      </Link>
+      <Reveal>
+        <Link className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent)]" href="/writing">
+          <span aria-hidden>←</span>
+          返回文章归档
+        </Link>
+      </Reveal>
 
-      <header className="border-b border-[var(--line-soft)] pb-8">
+      <Reveal as="header" className="border-b border-[var(--line-soft)] pb-8">
         <div className="flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
           <span>Essay</span>
           <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
@@ -86,7 +89,7 @@ export default async function WritingDetailPage({ params }: PageProps) {
           {postRow.title}
         </h1>
         <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{engagementSummary}</p>
-      </header>
+      </Reveal>
 
       <ArticleTocProgress
         toc={toc}
@@ -104,7 +107,7 @@ export default async function WritingDetailPage({ params }: PageProps) {
           "[&_p]:leading-8 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6"
         }
       >
-        <section className="surface-card w-full p-6 sm:p-8">
+        <Reveal as="section" className="surface-card w-full p-6 sm:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">评论</h2>
@@ -124,7 +127,7 @@ export default async function WritingDetailPage({ params }: PageProps) {
             skipCommentTurnstile={skipCommentTurnstile}
             initialComments={initialComments}
           />
-        </section>
+        </Reveal>
       </ArticleTocProgress>
     </article>
   );

@@ -1,6 +1,7 @@
 import { getDb } from "@/db";
 import { listPublishedPostCards } from "@/lib/blog";
 import { PostCard } from "@/components/site/PostCard";
+import { Reveal } from "@/components/motion/Reveal";
 
 export default async function WritingPage() {
   const db = await getDb();
@@ -10,7 +11,7 @@ export default async function WritingPage() {
 
   return (
     <div className="space-y-10">
-      <header className="space-y-4 border-b border-[var(--line-soft)] pb-8">
+      <Reveal as="header" className="space-y-4 border-b border-[var(--line-soft)] pb-8">
         <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
           Writing
         </p>
@@ -20,39 +21,45 @@ export default async function WritingPage() {
         <p className="max-w-2xl text-base leading-8 text-[var(--muted)]">
           这里收录所有已发布文章。内容会偏向工程实践、产品感受、AI、以及我偶尔认真记录下来的生活观察。
         </p>
-      </header>
+      </Reveal>
 
       <div className="grid gap-5 md:grid-cols-3">
-        <div className="surface-card p-5">
+        <Reveal className="surface-card p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-strong)]">总文章数</p>
           <p className="mt-3 text-3xl font-semibold">{posts.length}</p>
-        </div>
-        <div className="surface-card p-5">
+        </Reveal>
+        <Reveal className="surface-card p-5" delay={1}>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-strong)]">写作节奏</p>
           <p className="mt-3 text-lg font-semibold">长期更新</p>
           <p className="mt-2 text-sm leading-7 text-[var(--muted)]">公开区只展示已发布快照，草稿仍在后台继续打磨。</p>
-        </div>
-        <div className="surface-card p-5">
+        </Reveal>
+        <Reveal className="surface-card p-5" delay={2}>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-strong)]">阅读建议</p>
           <p className="mt-3 text-lg font-semibold">从最新一篇开始</p>
           <p className="mt-2 text-sm leading-7 text-[var(--muted)]">也可以按热门列表回看站内最常被读到的内容。</p>
-        </div>
+        </Reveal>
       </div>
 
-      {lead ? <PostCard post={lead} featured /> : null}
+      {lead ? (
+        <Reveal>
+          <PostCard post={lead} featured />
+        </Reveal>
+      ) : null}
 
       {rest.length > 0 ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {rest.map((post) => (
-            <PostCard key={post.slug} post={post} />
+          {rest.map((post, i) => (
+            <Reveal key={post.slug} delay={i % 3}>
+              <PostCard post={post} />
+            </Reveal>
           ))}
         </div>
       ) : null}
 
       {posts.length === 0 ? (
-        <div className="surface-card p-10 text-center text-sm leading-7 text-[var(--muted)]">
+        <Reveal className="surface-card p-10 text-center text-sm leading-7 text-[var(--muted)]">
           暂时还没有已发布文章。等第一篇正式上线之后，这里会成为完整归档页。
-        </div>
+        </Reveal>
       ) : null}
     </div>
   );
