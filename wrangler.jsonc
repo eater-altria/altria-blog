@@ -33,6 +33,6 @@
 	"vars": {
 		"NEXT_PUBLIC_SITE_URL": "https://docs.altriayu.uk",
 		"NEXT_PUBLIC_AVATAR_BASE_URL": "https://images.altriayu.uk",
-		"NEXT_PUBLIC_TURNSTILE_SITE_KEY": "replace-with-your-turnstile-site-key"
+		"NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADLZOZvW8KMVlc93"
 	}
 }

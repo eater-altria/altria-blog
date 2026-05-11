@@ -1,5 +1,18 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
+/** Must match `vars` placeholder in `wrangler.jsonc` until a real key is set. */
+const TURNSTILE_SITE_KEY_PLACEHOLDER = "replace-with-your-turnstile-site-key";
+
+/**
+ * Returns a usable site key, or `undefined` when unset / still the template placeholder.
+ * Turnstile error **400020** means invalid sitekey — often caused by leaving the placeholder.
+ */
+export const resolveTurnstileSiteKey = (raw: string | undefined | null): string | undefined => {
+  const t = typeof raw === "string" ? raw.trim() : "";
+  if (!t || t === TURNSTILE_SITE_KEY_PLACEHOLDER) return undefined;
+  return t;
+};
+
 type TurnstileResult = { ok: true } | { ok: false; message: string; status?: number };
 
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";

@@ -48,12 +48,12 @@ export const NewPostForm = () => {
         required
         disabled={busy}
       />
-      <p className="cyber-muted text-xs">
+      <p className="text-xs text-[var(--muted)]">
         可选 YAML frontmatter：<code className="font-mono">title</code>、{" "}
         <code className="font-mono">slug</code>。保存后仍是草稿，发布后访客才可见。
       </p>
       {error && (
-        <p className="cyber-danger text-sm" role="alert">
+        <p className="text-sm text-[var(--danger)]" role="alert">
           {error}
         </p>
       )}
@@ -61,7 +61,7 @@ export const NewPostForm = () => {
         <button
           disabled={busy}
           type="submit"
-          className="cyber-button px-4 py-2.5 text-sm font-medium disabled:opacity-60"
+          className="button-primary px-4 py-2.5 text-sm font-medium disabled:opacity-60"
         >
           {busy ? "保存中..." : "保存草稿"}
         </button>

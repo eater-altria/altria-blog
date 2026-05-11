@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/guards";
+import { isStaffRole } from "@/lib/auth/roles";
 import { LogoutButton } from "@/components/LogoutButton";
 
 export const Nav = async () => {
@@ -23,7 +24,7 @@ export const Nav = async () => {
           <Link href="/rss.xml" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
             订阅
           </Link>
-          {user?.role === "super_admin" && (
+          {user && isStaffRole(user.role) && (
             <Link href="/admin" className="soft-pill px-3 py-1.5 text-xs font-medium">
               管理后台
             </Link>

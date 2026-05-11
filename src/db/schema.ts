@@ -52,6 +52,8 @@ export const comments = sqliteTable("comments", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  /** If set, this row is a reply to another comment on the same post (see migration FK). */
+  parentCommentId: text("parent_comment_id"),
   body: text("body").notNull(),
   createdAt: integer("created_at").notNull(),
 });

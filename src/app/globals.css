@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@uiw/react-md-editor/markdown-editor.css";
+@import "@uiw/react-markdown-preview/markdown.css";
 
 :root {
   --background: #f4efe6;
@@ -54,6 +56,8 @@ a {
     box-shadow 180ms ease, transform 180ms ease;
 }
 
+/* Component utilities: prefer `surface-card`, `story-link`, `button-*`, `input-shell` in TSX.
+   `cyber-*` selectors are legacy aliases sharing the same rules (see DESIGN.md). */
 .surface-card,
 .cyber-panel {
   border: 1px solid var(--surface-border);
@@ -184,4 +188,209 @@ a {
 .article-prose li,
 .article-prose blockquote {
   color: #2a3444;
+}
+
+.blog-md-editor .w-md-editor {
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.28)),
+    var(--surface);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 18px 48px rgba(26, 32, 44, 0.06);
+  backdrop-filter: blur(10px);
+  color: var(--foreground);
+  --color-canvas-default: transparent;
+  --color-border-default: var(--line-soft);
+  --color-accent-fg: var(--accent);
+  --md-editor-box-shadow-color: transparent;
+}
+
+.blog-md-editor .w-md-editor-toolbar {
+  min-height: 2.75rem;
+  border-bottom: 1px solid var(--line-soft);
+  background: rgba(255, 252, 247, 0.72);
+  padding: 0.45rem 0.55rem;
+}
+
+.blog-md-editor .w-md-editor-toolbar ul {
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.blog-md-editor .w-md-editor-toolbar li > button {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.55rem;
+  color: var(--muted);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.blog-md-editor .w-md-editor-toolbar li > button:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(31, 106, 93, 0.1) inset;
+}
+
+.blog-md-editor .w-md-editor-toolbar li > button:focus {
+  outline: none;
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(31, 106, 93, 0.1);
+}
+
+.blog-md-editor .w-md-editor-toolbar li.active > button {
+  background: var(--foreground);
+  color: #fffaf3;
+}
+
+.blog-md-editor .w-md-editor-toolbar-divider {
+  width: 1px;
+  height: 1.15rem;
+  margin: 0 0.35rem;
+  background: var(--line-soft);
+}
+
+.blog-md-editor .w-md-editor-content {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.blog-md-editor .w-md-editor-input {
+  border-right: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 252, 247, 0.2)),
+    rgba(255, 255, 255, 0.34);
+}
+
+.blog-md-editor .w-md-editor-text,
+.blog-md-editor .w-md-editor-text-input,
+.blog-md-editor .w-md-editor-text-pre {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.75;
+}
+
+.blog-md-editor .w-md-editor-text {
+  padding: 1rem 1.05rem;
+}
+
+.blog-md-editor .w-md-editor-text-input {
+  color: var(--foreground);
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--accent);
+}
+
+.blog-md-editor .w-md-editor-text-input::placeholder {
+  color: var(--muted-strong);
+  -webkit-text-fill-color: var(--muted-strong);
+}
+
+.blog-md-editor .w-md-editor-text-input::selection {
+  background: rgba(31, 106, 93, 0.16);
+}
+
+.blog-md-editor .w-md-editor-text-pre .token.title,
+.blog-md-editor .w-md-editor-text-pre .token.title.important {
+  color: var(--accent);
+}
+
+.blog-md-editor .w-md-editor-text-pre .token.bold,
+.blog-md-editor .w-md-editor-text-pre .token.url {
+  color: var(--accent-rose);
+}
+
+.blog-md-editor .wmde-markdown,
+.blog-md-editor .w-md-editor-preview {
+  background: transparent;
+  color: var(--foreground);
+}
+
+.blog-md-editor .w-md-editor-preview {
+  box-shadow: none;
+  padding: 1.1rem 1.25rem;
+}
+
+.blog-md-editor .wmde-markdown {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.75;
+}
+
+.blog-md-editor .wmde-markdown > *:first-child {
+  margin-top: 0;
+}
+
+.blog-md-editor .wmde-markdown h1,
+.blog-md-editor .wmde-markdown h2,
+.blog-md-editor .wmde-markdown h3,
+.blog-md-editor .wmde-markdown h4,
+.blog-md-editor .wmde-markdown h5,
+.blog-md-editor .wmde-markdown h6 {
+  border-bottom: 0;
+  color: var(--foreground);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.blog-md-editor .wmde-markdown p,
+.blog-md-editor .wmde-markdown li,
+.blog-md-editor .wmde-markdown blockquote {
+  color: #2a3444;
+}
+
+.blog-md-editor .wmde-markdown a {
+  color: var(--accent);
+  text-underline-offset: 0.18em;
+}
+
+.blog-md-editor .wmde-markdown blockquote {
+  border-left: 2px solid var(--line-strong);
+  color: var(--muted);
+  padding-left: 1rem;
+}
+
+.blog-md-editor .wmde-markdown code {
+  border-radius: 0.45rem;
+  background: rgba(31, 106, 93, 0.08);
+  color: var(--foreground);
+  padding: 0.1rem 0.35rem;
+}
+
+.blog-md-editor .wmde-markdown pre {
+  overflow-x: auto;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.9rem;
+  background: #1b2331;
+  color: #f8fafc;
+}
+
+.blog-md-editor .wmde-markdown pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.blog-md-editor .wmde-markdown img {
+  max-height: 26rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: 0 12px 32px rgba(26, 32, 44, 0.08);
+}
+
+.blog-md-editor .w-md-editor-bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .blog-md-editor .w-md-editor-input {
+    border-right: 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
 }

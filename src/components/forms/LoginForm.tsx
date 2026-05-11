@@ -42,11 +42,11 @@ export const LoginForm = () => {
       className="flex w-full flex-col gap-4"
       onSubmit={handleSubmit}
     >
-      <h2 className="cyber-title text-2xl font-semibold tracking-tight">登录</h2>
+      <h2 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">登录</h2>
       <label className="flex flex-col gap-1 text-sm">
-        <span className="cyber-muted">邮箱</span>
+        <span className="text-[var(--muted)]">邮箱</span>
         <input
-          className="cyber-input px-4 py-3"
+          className="input-shell px-4 py-3"
           type="email"
           autoComplete="email"
           value={email}
@@ -55,9 +55,9 @@ export const LoginForm = () => {
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        <span className="cyber-muted">密码</span>
+        <span className="text-[var(--muted)]">密码</span>
         <input
-          className="cyber-input px-4 py-3"
+          className="input-shell px-4 py-3"
           type="password"
           autoComplete="current-password"
           value={password}
@@ -66,14 +66,14 @@ export const LoginForm = () => {
         />
       </label>
       {error && (
-        <p className="cyber-danger text-sm" role="alert">
+        <p className="text-sm text-[var(--danger)]" role="alert">
           {error}
         </p>
       )}
       <button
         disabled={loading}
         type="submit"
-        className="cyber-button mt-2 px-4 py-3 text-sm font-medium disabled:opacity-60"
+        className="button-primary mt-2 px-4 py-3 text-sm font-medium disabled:opacity-60"
       >
         {loading ? "登录中..." : "立即登录"}
       </button>

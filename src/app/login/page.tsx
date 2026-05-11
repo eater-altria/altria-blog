@@ -18,7 +18,7 @@ export default function LoginPage() {
         </>
       }
     >
-      <Suspense fallback={<p className="cyber-muted text-center text-sm">加载中...</p>}>
+      <Suspense fallback={<p className="text-center text-sm text-[var(--muted)]">加载中...</p>}>
         <LoginForm />
       </Suspense>
     </AuthShell>

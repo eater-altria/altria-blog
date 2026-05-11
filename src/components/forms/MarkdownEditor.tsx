@@ -1,18 +1,27 @@
 "use client";
 
-import { marked } from "marked";
+import dynamic from "next/dynamic";
 import {
   useCallback,
+  useEffect,
   useId,
-  useMemo,
   useRef,
   useState,
-  type ChangeEvent,
+  type ComponentPropsWithoutRef,
   type ClipboardEvent,
   type DragEvent,
   type ReactNode,
   type TextareaHTMLAttributes,
 } from "react";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor/nohighlight"), {
+  ssr: false,
+  loading: () => (
+    <div className="surface-card flex min-h-[420px] items-center justify-center text-sm text-[var(--muted)]">
+      编辑器加载中...
+    </div>
+  ),
+});
 
 type MarkdownEditorProps = {
   value: string;
@@ -31,28 +40,31 @@ type UploadResult = {
   markdown: string;
 };
 
-const toolbarActions = [
-  {
-    label: "H2",
-    run: (selected: string) => `## ${selected || "二级标题"}`,
-  },
-  {
-    label: "B",
-    run: (selected: string) => `**${selected || "加粗文本"}**`,
-  },
-  {
-    label: "Quote",
-    run: (selected: string) => `> ${selected || "引用内容"}`,
-  },
-  {
-    label: "Code",
-    run: (selected: string) => `\`\`\`\n${selected || "code"}\n\`\`\``,
-  },
-  {
-    label: "Link",
-    run: (selected: string) => `[${selected || "链接标题"}](https://example.com)`,
-  },
-] as const;
+type UploadedImageMarkdown = {
+  imageUrl: string;
+  markdown: string;
+  previewUrl: string;
+};
+
+type MarkdownPreviewImageProps = ComponentPropsWithoutRef<"img"> & {
+  node?: unknown;
+  previewUrls: Record<string, string>;
+};
+
+function MarkdownPreviewImage({
+  alt = "",
+  node,
+  previewUrls,
+  src,
+  ...props
+}: MarkdownPreviewImageProps) {
+  void node;
+  const resolvedSrc = typeof src === "string" ? previewUrls[src] ?? src : src;
+
+  // next/image is not a fit here: markdown previews need to render arbitrary and blob URLs.
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img {...props} alt={alt} src={resolvedSrc} />;
+}
 
 function deriveImageAlt(fileName: string): string {
   const raw = fileName.replace(/\.[^.]+$/, "").trim();
@@ -61,6 +73,11 @@ function deriveImageAlt(fileName: string): string {
 
 function buildImageMarkdown(url: string, fileName: string): string {
   return `![${deriveImageAlt(fileName)}](${url})`;
+}
+
+function getEditorHeight(minHeightClassName: string): number {
+  const matched = minHeightClassName.match(/min-h-\[(\d+)px\]/);
+  return matched ? Number(matched[1]) : 420;
 }
 
 function insertAtSelection(
@@ -91,53 +108,65 @@ export function MarkdownEditor({
   footer,
   ...textareaProps
 }: MarkdownEditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<Record<string, string>>({});
+  const imagePreviewUrlsRef = useRef<Record<string, string>>({});
   const inputId = useId();
 
-  const previewHtml = useMemo(
-    () => marked.parse(value || "_预览区域会跟随 Markdown 内容实时更新。_"),
-    [value],
-  );
+  useEffect(() => {
+    return () => {
+      Object.values(imagePreviewUrlsRef.current).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
 
-  const uploadImageFile = useCallback(
-    async (file: File) => {
-      const fd = new FormData();
-      fd.set("image", file);
+  const uploadImageFile = useCallback(async (file: File): Promise<UploadedImageMarkdown> => {
+    const fd = new FormData();
+    fd.set("image", file);
 
-      const res = await fetch("/api/admin/uploads/images", {
-        method: "POST",
-        credentials: "include",
-        body: fd,
-      });
+    const res = await fetch("/api/admin/uploads/images", {
+      method: "POST",
+      credentials: "include",
+      body: fd,
+    });
 
-      const data = (await res.json().catch(() => ({}))) as Partial<UploadResult> & {
-        error?: string;
-      };
+    const data = (await res.json().catch(() => ({}))) as Partial<UploadResult> & {
+      error?: string;
+    };
 
-      if (!res.ok || !data.imageUrl) {
-        throw new Error(data.error ?? "图片上传失败");
-      }
+    if (!res.ok || !data.imageUrl) {
+      throw new Error(data.error ?? "图片上传失败");
+    }
 
-      return buildImageMarkdown(data.imageUrl, file.name);
-    },
-    [],
-  );
+    return {
+      imageUrl: data.imageUrl,
+      markdown: buildImageMarkdown(data.imageUrl, file.name),
+      previewUrl: URL.createObjectURL(file),
+    };
+  }, []);
 
   const handleImageInsertion = useCallback(
-    async (file: File) => {
-      const textarea = textareaRef.current;
-      if (!textarea) return;
-
+    async (textarea: HTMLTextAreaElement, file: File) => {
       setUploading(true);
       setUploadError(null);
 
       try {
-        const markdown = await uploadImageFile(file);
-        const blockPrefix =
-          value && !value.endsWith("\n") ? "\n\n" : value ? "\n" : "";
-        insertAtSelection(textarea, value, `${blockPrefix}${markdown}\n`, onChange);
+        const uploaded = await uploadImageFile(file);
+        const blockPrefix = value && !value.endsWith("\n") ? "\n\n" : value ? "\n" : "";
+        setImagePreviewUrls((current) => {
+          const previousPreviewUrl = current[uploaded.imageUrl];
+          if (previousPreviewUrl) {
+            URL.revokeObjectURL(previousPreviewUrl);
+          }
+
+          const next = {
+            ...current,
+            [uploaded.imageUrl]: uploaded.previewUrl,
+          };
+          imagePreviewUrlsRef.current = next;
+          return next;
+        });
+        insertAtSelection(textarea, value, `${blockPrefix}${uploaded.markdown}\n`, onChange);
       } catch (error) {
         setUploadError(error instanceof Error ? error.message : "图片上传失败");
       } finally {
@@ -156,7 +185,7 @@ export function MarkdownEditor({
       if (!imageFile) return;
 
       event.preventDefault();
-      await handleImageInsertion(imageFile);
+      await handleImageInsertion(event.currentTarget, imageFile);
     },
     [handleImageInsertion],
   );
@@ -170,79 +199,55 @@ export function MarkdownEditor({
       if (!imageFile) return;
 
       event.preventDefault();
-      await handleImageInsertion(imageFile);
+      await handleImageInsertion(event.currentTarget, imageFile);
     },
     [handleImageInsertion],
-  );
-
-  const handleToolbarInsert = useCallback(
-    (builder: (selected: string) => string) => {
-      const textarea = textareaRef.current;
-      if (!textarea) return;
-
-      const selection = value.slice(textarea.selectionStart ?? 0, textarea.selectionEnd ?? 0);
-      insertAtSelection(textarea, value, builder(selection), onChange);
-    },
-    [onChange, value],
   );
 
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <label htmlFor={inputId} className="text-sm font-medium text-[var(--foreground)]">
+        <label id={inputId} className="text-sm font-medium text-[var(--foreground)]">
           {label}
         </label>
-        <div className="flex flex-wrap items-center gap-2">
-          {toolbarActions.map((action) => (
-            <button
-              key={action.label}
-              type="button"
-              className="rounded-full border border-[var(--surface-border)] bg-white/70 px-3 py-1.5 text-xs text-[var(--muted)] transition hover:border-[var(--line-strong)] hover:text-[var(--foreground)]"
-              onClick={() => handleToolbarInsert(action.run)}
-              disabled={disabled || uploading}
-            >
-              {action.label}
-            </button>
-          ))}
-        </div>
+        <span className="text-xs text-[var(--muted)]">
+          {uploading ? "图片上传中..." : "支持粘贴图片上传"}
+        </span>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
-        <div className="surface-card overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[var(--line-soft)] bg-white/45 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-            <span>Editor</span>
-            <span>{uploading ? "图片上传中..." : "支持粘贴图片上传"}</span>
-          </div>
-          <textarea
-            {...textareaProps}
-            id={inputId}
-            ref={textareaRef}
-            className={`cyber-input w-full rounded-none border-0 bg-transparent p-4 font-mono text-sm leading-7 shadow-none focus:shadow-none ${minHeightClassName}`}
-            value={value}
-            onChange={(event: ChangeEvent<HTMLTextAreaElement>) => onChange(event.target.value)}
-            onPaste={handlePaste}
-            onDrop={handleDrop}
-            onDragOver={(event) => event.preventDefault()}
-            placeholder={placeholder}
-            disabled={disabled}
-            spellCheck={false}
-          />
-        </div>
-
-        <div className="surface-card overflow-hidden">
-          <div className="border-b border-[var(--line-soft)] bg-white/45 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-strong)]">
-            Preview
-          </div>
-          <div
-            className="article-prose min-h-[420px] max-w-none p-5 text-sm leading-7 [&_a]:text-[var(--accent)] [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:border-l-2 [&_blockquote]:border-[var(--line-strong)] [&_blockquote]:pl-4 [&_code]:rounded-md [&_code]:bg-[rgba(31,106,93,0.08)] [&_code]:px-1.5 [&_code]:py-0.5 [&_pre]:overflow-x-auto [&_pre]:rounded-2xl [&_pre]:border [&_pre]:border-[var(--surface-border)] [&_pre]:bg-[#1b2331] [&_pre]:p-4 [&_pre]:text-[#f8fafc]"
-            dangerouslySetInnerHTML={{ __html: previewHtml }}
-          />
-        </div>
+      <div
+        className={`blog-md-editor ${disabled || uploading ? "pointer-events-none opacity-70" : ""}`}
+        data-color-mode="light"
+      >
+        <MDEditor
+          value={value}
+          onChange={(nextValue) => onChange(nextValue ?? "")}
+          height={getEditorHeight(minHeightClassName)}
+          preview="live"
+          visibleDragbar={false}
+          previewOptions={{
+            components: {
+              img: (props: ComponentPropsWithoutRef<"img">) => (
+                <MarkdownPreviewImage {...props} previewUrls={imagePreviewUrls} />
+              ),
+            },
+          }}
+          textareaProps={{
+            ...textareaProps,
+            "aria-labelledby": inputId,
+            placeholder,
+            disabled: disabled || uploading,
+            spellCheck: false,
+            onPaste: handlePaste,
+            onDrop: handleDrop,
+            onDragOver: (event) => event.preventDefault(),
+          }}
+        />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--muted)]">
         <p>可直接粘贴截图或拖拽图片，系统会自动上传并插入 Markdown 图片链接。</p>
-        {uploadError ? <p className="cyber-danger">{uploadError}</p> : null}
+        {uploadError ? <p className="text-[var(--danger)]">{uploadError}</p> : null}
       </div>
       {footer}
     </div>

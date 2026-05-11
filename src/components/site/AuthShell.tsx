@@ -18,7 +18,7 @@ export function AuthShell({
   return (
     <section className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(22rem,26rem)] lg:items-start">
       <div className="space-y-6 pt-3">
-        <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
+        <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
           {eyebrow}
         </p>
         <div className="space-y-4">

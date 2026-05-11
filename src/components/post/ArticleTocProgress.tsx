@@ -134,7 +134,7 @@ export function ArticleTocProgress({ toc, proseHtml, proseClassName, children }:
 
   function renderTocNav(tocNodes: ReactElement[], extraClass?: string) {
     return (
-      <nav className={`cyber-panel p-4 ${extraClass ?? ""}`} aria-label="文章目录">
+      <nav className={`surface-card p-4 ${extraClass ?? ""}`} aria-label="文章目录">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)]">目录</p>
         <ol className="mt-3 max-h-[40vh] list-none space-y-1 overflow-y-auto pr-1 lg:max-h-[calc(100vh-10rem)]">
           {tocNodes}

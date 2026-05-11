@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
-import { escape } from "html-escaper";
 import { getDb } from "@/db";
 import { comments, posts, postPublished, users } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth/guards";
@@ -14,8 +13,10 @@ import {
 } from "@/lib/post-engagement";
 import { markdownToTrustedArticle } from "@/lib/render-post";
 import { ArticleTocProgress } from "@/components/post/ArticleTocProgress";
-import { CommentForm } from "@/components/forms/CommentForm";
+import { ArticleCommentSection } from "@/components/post/ArticleCommentSection";
+import { getSkipCommentTurnstileForUser } from "@/lib/comment-turnstile-bypass-rsc";
 import { getTurnstileSiteKey } from "@/lib/public-env";
+import type { FlatComment } from "@/lib/comment-thread";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -48,14 +49,25 @@ export default async function WritingDetailPage({ params }: PageProps) {
       createdAt: comments.createdAt,
       username: users.username,
       avatarUrl: users.avatarUrl,
+      parentCommentId: comments.parentCommentId,
     })
     .from(comments)
     .innerJoin(users, eq(comments.userId, users.id))
     .where(eq(comments.postId, postRow.id))
     .orderBy(asc(comments.createdAt));
 
+  const initialComments: FlatComment[] = commentRows.map((r) => ({
+    id: r.id,
+    body: r.body,
+    createdAt: r.createdAt,
+    username: r.username,
+    avatarUrl: r.avatarUrl,
+    parentCommentId: r.parentCommentId ?? null,
+  }));
+
   const user = await getCurrentUser();
   const siteKey = await getTurnstileSiteKey();
+  const skipCommentTurnstile = user ? await getSkipCommentTurnstileForUser(user.id) : false;
 
   return (
     <article className="space-y-10">
@@ -65,7 +77,7 @@ export default async function WritingDetailPage({ params }: PageProps) {
       </Link>
 
       <header className="border-b border-[var(--line-soft)] pb-8">
-        <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-strong)]">
+        <div className="flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
           <span>Essay</span>
           <span className="h-1 w-1 rounded-full bg-[var(--line-strong)]" />
           <span>{formatLongDate(published.publishedAt)}</span>
@@ -104,43 +116,14 @@ export default async function WritingDetailPage({ params }: PageProps) {
             </div>
             <span className="soft-pill px-3 py-1.5 text-xs font-medium">{commentRows.length} 条留言</span>
           </div>
-          {user ? (
-            <div className="mt-6">
-              <CommentForm slug={slug} siteKey={siteKey} />
-            </div>
-          ) : null}
-          <ul className="mt-8 space-y-4">
-            {commentRows.length === 0 ? (
-              <li className="text-sm text-[var(--muted)]">还没有评论，第一条留言会很显眼。</li>
-            ) : null}
-            {commentRows.map((comment) => (
-              <li key={comment.id} className="rounded-[1.2rem] border border-[var(--surface-border)] bg-white/55 p-5">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 overflow-hidden rounded-full border border-[var(--surface-border)] bg-[var(--surface-strong)]">
-                    {comment.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={comment.avatarUrl} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-xs text-[var(--muted-strong)]">
-                        无
-                      </div>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-[var(--foreground)]">
-                      {escape(comment.username ?? "匿名用户")}
-                    </p>
-                    <p className="text-xs text-[var(--muted-strong)]">
-                      {new Date(comment.createdAt).toLocaleString("zh-CN")}
-                    </p>
-                  </div>
-                </div>
-                <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-[var(--foreground)]">
-                  {escape(comment.body)}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <ArticleCommentSection
+            slug={slug}
+            siteKey={siteKey}
+            userLoggedIn={Boolean(user)}
+            canDeleteComments={user?.role === "super_admin"}
+            skipCommentTurnstile={skipCommentTurnstile}
+            initialComments={initialComments}
+          />
         </section>
       </ArticleTocProgress>
     </article>

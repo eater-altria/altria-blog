@@ -1,6 +1,6 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextResponse } from "next/server";
-import { requireSuperAdmin } from "@/lib/auth/guards";
+import { requireStaff } from "@/lib/auth/guards";
 import {
   buildPublicAssetUrl,
   getImageExtension,
@@ -8,8 +8,8 @@ import {
 } from "@/lib/uploads";
 
 export async function POST(req: Request) {
-  const admin = await requireSuperAdmin();
-  if (!admin) {
+  const staff = await requireStaff();
+  if (!staff) {
     return NextResponse.json({ error: "无权限访问" }, { status: 403 });
   }
 

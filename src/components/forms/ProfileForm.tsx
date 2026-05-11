@@ -74,7 +74,7 @@ export const ProfileForm = ({ username, avatarUrl }: ProfileFormProps) => {
 
   return (
     <div className="surface-card flex w-full max-w-xl flex-col gap-6 p-6 sm:p-7">
-      <h2 className="cyber-title text-2xl font-semibold tracking-tight">用户中心</h2>
+      <h2 className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">用户中心</h2>
       <section className="flex items-center gap-4">
         <div className="h-14 w-14 overflow-hidden rounded-full border border-[var(--surface-border)] bg-[var(--surface-strong)]">
           {avatarUrl ? (
@@ -84,14 +84,16 @@ export const ProfileForm = ({ username, avatarUrl }: ProfileFormProps) => {
             <div className="flex h-full items-center justify-center text-xs text-[var(--muted-strong)]">无头像</div>
           )}
         </div>
-        <p className="cyber-muted text-sm">可上传 PNG/JPEG/WEBP，最大 2MB。</p>
+        <p className="text-sm text-[var(--muted)]">可上传 PNG/JPEG/WEBP，最大 2MB。</p>
       </section>
 
       <form className="flex flex-col gap-2" onSubmit={handleUsernameSubmit}>
-        <label htmlFor="profile-username" className="text-sm cyber-muted">用户名</label>
+        <label htmlFor="profile-username" className="text-sm text-[var(--muted)]">
+          用户名
+        </label>
         <input
           id="profile-username"
-          className="cyber-input px-4 py-3"
+          className="input-shell px-4 py-3"
           value={nextUsername}
           minLength={3}
           maxLength={24}
@@ -102,17 +104,19 @@ export const ProfileForm = ({ username, avatarUrl }: ProfileFormProps) => {
         <button
           type="submit"
           disabled={savingName}
-          className="cyber-button self-start px-4 py-2 text-xs font-medium disabled:opacity-60"
+          className="button-primary self-start px-4 py-2 text-xs font-medium disabled:opacity-60"
         >
           {savingName ? "保存中..." : "保存用户名"}
         </button>
       </form>
 
       <form className="flex flex-col gap-2" onSubmit={handleAvatarSubmit}>
-        <label htmlFor="profile-avatar" className="text-sm cyber-muted">头像文件</label>
+        <label htmlFor="profile-avatar" className="text-sm text-[var(--muted)]">
+          头像文件
+        </label>
         <input
           id="profile-avatar"
-          className="cyber-input px-4 py-3 text-sm"
+          className="input-shell px-4 py-3 text-sm"
           type="file"
           accept="image/png,image/jpeg,image/webp"
           onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
@@ -120,13 +124,13 @@ export const ProfileForm = ({ username, avatarUrl }: ProfileFormProps) => {
         <button
           type="submit"
           disabled={savingAvatar}
-          className="cyber-button self-start px-4 py-2 text-xs font-medium disabled:opacity-60"
+          className="button-primary self-start px-4 py-2 text-xs font-medium disabled:opacity-60"
         >
           {savingAvatar ? "上传中..." : "上传头像"}
         </button>
       </form>
 
-      {error && <p className="cyber-danger text-sm">{error}</p>}
+      {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
       {ok && <p className="text-sm text-[var(--accent)]">{ok}</p>}
     </div>
   );

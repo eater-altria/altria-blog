@@ -7,9 +7,11 @@ import { MarkdownEditor } from "@/components/forms/MarkdownEditor";
 interface EditPostFormProps {
   postId: string;
   initialMarkdown: string;
+  /** 仅 super_admin 可删除文章；普通 admin 不显示删除入口。 */
+  canDeletePost?: boolean;
 }
 
-export const EditPostForm = ({ postId, initialMarkdown }: EditPostFormProps) => {
+export const EditPostForm = ({ postId, initialMarkdown, canDeletePost = false }: EditPostFormProps) => {
   const router = useRouter();
   const [markdown, setMarkdown] = useState(initialMarkdown);
   const [error, setError] = useState<string | null>(null);
@@ -111,12 +113,12 @@ export const EditPostForm = ({ postId, initialMarkdown }: EditPostFormProps) => 
           <button
             disabled={busy}
             type="submit"
-            className="cyber-button-secondary px-4 py-2.5 text-sm disabled:opacity-60"
+            className="button-secondary px-4 py-2.5 text-sm disabled:opacity-60"
           >
             保存草稿
           </button>
           <a
-            className="cyber-link inline-flex rounded-full border border-transparent px-4 py-2 text-sm underline-offset-2 hover:underline"
+            className="story-link inline-flex rounded-full border border-transparent px-4 py-2 text-sm underline-offset-2 hover:underline"
             href={`/admin/posts/${postId}/preview`}
             target="_blank"
             rel="noreferrer"
@@ -126,23 +128,25 @@ export const EditPostForm = ({ postId, initialMarkdown }: EditPostFormProps) => 
           <button
             disabled={busy}
             type="button"
-            className="cyber-button px-4 py-2.5 text-sm font-medium disabled:opacity-60"
+            className="button-primary px-4 py-2.5 text-sm font-medium disabled:opacity-60"
             onClick={handlePublish}
           >
             发布（覆盖线上快照）
           </button>
-          <button
-            disabled={busy}
-            type="button"
-            className="rounded-full border border-[rgba(177,69,61,0.24)] bg-[rgba(177,69,61,0.08)] px-4 py-2.5 text-sm font-medium text-[var(--danger)] transition hover:bg-[rgba(177,69,61,0.14)] disabled:opacity-60"
-            onClick={handleDelete}
-          >
-            删除文章
-          </button>
+          {canDeletePost ? (
+            <button
+              disabled={busy}
+              type="button"
+              className="rounded-full border border-[rgba(177,69,61,0.24)] bg-[rgba(177,69,61,0.08)] px-4 py-2.5 text-sm font-medium text-[var(--danger)] transition hover:bg-[rgba(177,69,61,0.14)] disabled:opacity-60"
+              onClick={handleDelete}
+            >
+              删除文章
+            </button>
+          ) : null}
         </div>
       </form>
       {error && (
-        <p className="cyber-danger text-sm" role="alert">
+        <p className="text-sm text-[var(--danger)]" role="alert">
           {error}
         </p>
       )}

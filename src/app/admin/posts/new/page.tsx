@@ -7,14 +7,14 @@ export default function AdminNewPostPage() {
       <div className="flex items-center justify-between">
         <Link
           href="/admin"
-          className="cyber-link text-sm"
+          className="story-link text-sm"
         >
           ← 返回后台首页
         </Link>
       </div>
       <div>
-        <h1 className="cyber-title text-3xl font-semibold tracking-tight">上传 Markdown</h1>
-        <p className="cyber-muted mt-2 text-sm">
+        <h1 className="text-3xl font-semibold tracking-tight text-[var(--foreground)]">上传 Markdown</h1>
+        <p className="mt-2 text-sm text-[var(--muted)]">
           草稿在你点击<strong>发布</strong>前仅管理员可见，访客始终读取最新的已发布快照。
         </p>
       </div>

@@ -2,13 +2,13 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { postDrafts, posts, postPublished } from "@/db/schema";
-import { requireSuperAdmin } from "@/lib/auth/guards";
+import { requireStaff } from "@/lib/auth/guards";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(_req: Request, ctx: RouteContext) {
-  const admin = await requireSuperAdmin();
-  if (!admin) {
+  const staff = await requireStaff();
+  if (!staff) {
     return NextResponse.json({ error: "无权限访问" }, { status: 403 });
   }
 

@@ -3,12 +3,12 @@ import matter from "gray-matter";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { postDrafts, posts, postPublished } from "@/db/schema";
-import { requireSuperAdmin } from "@/lib/auth/guards";
+import { requireStaff } from "@/lib/auth/guards";
 import { isValidSlug, slugify } from "@/lib/slug";
 
 export async function GET() {
-  const admin = await requireSuperAdmin();
-  if (!admin) {
+  const staff = await requireStaff();
+  if (!staff) {
     return NextResponse.json({ error: "无权限访问" }, { status: 403 });
   }
 
@@ -34,8 +34,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const admin = await requireSuperAdmin();
-  if (!admin) {
+  const staff = await requireStaff();
+  if (!staff) {
     return NextResponse.json({ error: "无权限访问" }, { status: 403 });
   }
 
