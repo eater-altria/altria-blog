@@ -27,7 +27,8 @@ cf-edge-blog/
 ├─ src/
 │  ├─ app/
 │  │  ├─ page.tsx                      # 首页
-│  │  ├─ posts/                        # 前台文章列表与详情
+│  │  ├─ writing/                      # 前台文章列表与详情
+│  │  ├─ posts/                        # 兼容旧链接，跳转到 /writing
 │  │  ├─ admin/                        # 后台管理页面（super_admin）
 │  │  ├─ login/ register/              # 登录/注册页面
 │  │  ├─ api/

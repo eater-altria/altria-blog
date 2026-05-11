@@ -27,7 +27,7 @@ export async function GET() {
   const site = getSiteBaseUrl();
   const items = rows
     .map((row) => {
-      const url = absoluteUrl(`/posts/${row.slug}`);
+      const url = absoluteUrl(`/writing/${row.slug}`);
       const pubDate = new Date(row.publishedAt).toUTCString();
       return `
     <item>
@@ -44,7 +44,7 @@ export async function GET() {
   <channel>
     <title>${escapeXml("CF Edge Blog")}</title>
     <link>${escapeXml(`${site}/`)}</link>
-    <description>${escapeXml("Published posts feed")}</description>
+    <description>${escapeXml("Published writing feed")}</description>
     ${items}
   </channel>
 </rss>`;

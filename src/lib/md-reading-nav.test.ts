@@ -51,7 +51,7 @@ test("parseMarkdownBodyWithAnchors injects heading ids aligned with TOC length",
   const { html, toc } = await parseMarkdownBodyWithAnchors(md);
   assert.equal((html.match(/<h[1-6][^>]*\sid=/g) ?? []).length, toc.length);
 
-  let secondPass: Awaited<ReturnType<typeof parseMarkdownBodyWithAnchors>>;
-  secondPass = await parseMarkdownBodyWithAnchors(md);
+  const secondPass: Awaited<ReturnType<typeof parseMarkdownBodyWithAnchors>> =
+    await parseMarkdownBodyWithAnchors(md);
   assert.equal(secondPass.toc.map((entry) => entry.id).join(), toc.map((entry) => entry.id).join());
 });

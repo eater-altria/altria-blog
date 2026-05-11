@@ -4,13 +4,8 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth/guards";
+import { buildPublicAssetUrl } from "@/lib/uploads";
 import { validateAvatarFile } from "@/lib/user-profile";
-
-const extByType: Record<string, string> = {
-  "image/png": "png",
-  "image/jpeg": "jpg",
-  "image/webp": "webp",
-};
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -33,7 +28,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "未配置头像存储桶" }, { status: 500 });
   }
 
-  const ext = extByType[avatar.type];
+  const ext = avatar.type === "image/png" ? "png" : avatar.type === "image/jpeg" ? "jpg" : "webp";
   const objectKey = `blog/${Date.now()}-${crypto.randomUUID()}.${ext}`;
   const bytes = await avatar.arrayBuffer();
   await env.AVATAR_R2.put(objectKey, bytes, {
@@ -45,7 +40,7 @@ export async function POST(req: Request) {
   }
 
   const baseUrl = env.NEXT_PUBLIC_AVATAR_BASE_URL;
-  const avatarUrl = baseUrl ? `${baseUrl.replace(/\/$/, "")}/${objectKey}` : objectKey;
+  const avatarUrl = buildPublicAssetUrl(baseUrl, objectKey);
 
   const db = await getDb();
   await db

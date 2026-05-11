@@ -91,3 +91,25 @@ export async function PATCH(req: Request, ctx: RouteContext) {
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(_req: Request, ctx: RouteContext) {
+  const admin = await requireSuperAdmin();
+  if (!admin) {
+    return NextResponse.json({ error: "无权限访问" }, { status: 403 });
+  }
+
+  const { id } = await ctx.params;
+  const db = await getDb();
+  const postRow = await db.select().from(posts).where(eq(posts.id, id)).get();
+  if (!postRow) {
+    return NextResponse.json({ error: "文章不存在" }, { status: 404 });
+  }
+
+  await db.delete(posts).where(eq(posts.id, id));
+
+  return NextResponse.json({
+    ok: true,
+    deletedPostId: id,
+    deletedSlug: postRow.slug,
+  });
+}

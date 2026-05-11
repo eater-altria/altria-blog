@@ -43,17 +43,17 @@ export const RegisterForm = ({ siteKey }: RegisterFormProps) => {
 
   return (
     <form
-      className="cyber-panel mx-auto mt-10 flex w-full max-w-md flex-col gap-4 p-6"
+      className="flex w-full flex-col gap-4"
       onSubmit={handleSubmit}
     >
-      <h1 className="cyber-title text-xl font-semibold">注册账号</h1>
+      <h2 className="cyber-title text-2xl font-semibold tracking-tight">注册账号</h2>
       <p className="cyber-muted text-sm">
         通过此页面注册的账户默认为 <strong>user</strong> 角色，超级管理员需单独写入 D1。
       </p>
       <label className="flex flex-col gap-1 text-sm">
         <span className="cyber-muted">用户名（3-24位，字母/数字/下划线）</span>
         <input
-          className="cyber-input px-3 py-2"
+          className="cyber-input px-4 py-3"
           type="text"
           autoComplete="username"
           value={username}
@@ -67,7 +67,7 @@ export const RegisterForm = ({ siteKey }: RegisterFormProps) => {
       <label className="flex flex-col gap-1 text-sm">
         <span className="cyber-muted">邮箱</span>
         <input
-          className="cyber-input px-3 py-2"
+          className="cyber-input px-4 py-3"
           type="email"
           autoComplete="email"
           value={email}
@@ -78,7 +78,7 @@ export const RegisterForm = ({ siteKey }: RegisterFormProps) => {
       <label className="flex flex-col gap-1 text-sm">
         <span className="cyber-muted">密码（至少 8 位）</span>
         <input
-          className="cyber-input px-3 py-2"
+          className="cyber-input px-4 py-3"
           type="password"
           autoComplete="new-password"
           value={password}
@@ -96,7 +96,7 @@ export const RegisterForm = ({ siteKey }: RegisterFormProps) => {
       <button
         disabled={loading || !turnstileToken}
         type="submit"
-        className="cyber-button px-4 py-2 text-sm font-medium disabled:opacity-60"
+        className="cyber-button mt-2 px-4 py-3 text-sm font-medium disabled:opacity-60"
       >
         {loading ? "创建中..." : "创建账号"}
       </button>

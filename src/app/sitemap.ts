@@ -24,13 +24,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
     {
-      url: `${base}/posts`,
+      url: `${base}/writing`,
       lastModified: new Date(),
     },
   ];
 
   const postEntries: MetadataRoute.Sitemap = rows.map((row) => ({
-    url: absoluteUrl(`/posts/${row.slug}`),
+    url: absoluteUrl(`/writing/${row.slug}`),
     lastModified: new Date(row.publishedAt),
   }));
 

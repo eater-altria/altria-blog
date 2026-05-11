@@ -21,17 +21,17 @@ export default async function AdminHomePage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="cyber-muted text-xs uppercase tracking-wide">仅管理员可见</p>
-          <h1 className="cyber-title text-2xl font-semibold">文章管理后台</h1>
+          <h1 className="cyber-title text-3xl font-semibold tracking-tight">文章管理后台</h1>
         </div>
         <Link
           href="/admin/posts/new"
-          className="cyber-button px-4 py-2 text-sm"
+          className="cyber-button px-4 py-2.5 text-sm"
         >
           新建草稿
         </Link>
       </div>
-      <table className="cyber-panel w-full text-sm">
-        <thead className="border-b border-cyan-400/20 bg-[#0a1430] text-left">
+      <table className="cyber-panel w-full overflow-hidden text-sm">
+        <thead className="border-b border-[var(--line-soft)] bg-white/60 text-left">
           <tr>
             <th className="px-4 py-2 font-semibold">标题</th>
             <th className="px-4 py-2 font-semibold">Slug</th>
@@ -48,7 +48,7 @@ export default async function AdminHomePage() {
             </tr>
           )}
           {rows.map((row) => (
-            <tr key={row.post.id} className="border-t border-cyan-400/15">
+            <tr key={row.post.id} className="border-t border-[var(--line-soft)]">
               <td className="px-4 py-3">
                 <Link className="cyber-link font-medium" href={`/admin/posts/${row.post.id}`}>
                   {row.post.title}

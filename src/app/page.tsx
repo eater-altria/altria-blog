@@ -1,61 +1,155 @@
 import Link from "next/link";
 import { getDb } from "@/db";
-import { getHotPublishedPosts, rankHotPosts } from "@/lib/post-engagement";
+import { listPublishedPostCards } from "@/lib/blog";
+import { PostCard } from "@/components/site/PostCard";
 
 export default async function Home() {
   const db = await getDb();
-  const hotPosts = rankHotPosts(await getHotPublishedPosts(db, 20), 3);
+  const publishedPosts = await listPublishedPostCards(db);
+  const latestPosts = publishedPosts.slice(0, 5);
+  const featuredPost = latestPosts[0] ?? null;
+  const secondaryPosts = latestPosts.slice(1);
+  const popularPosts = [...publishedPosts]
+    .sort((left, right) => right.readCount - left.readCount || right.publishedAt - left.publishedAt)
+    .slice(0, 3);
 
   return (
-    <div className="flex flex-col gap-8">
-      <section className="cyber-panel relative overflow-hidden p-7 sm:p-10">
-        <div className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-cyan-400/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-fuchsia-500/20 blur-3xl" />
-        <h1 className="cyber-title mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-          Altria 的部落格
-        </h1>
-        <p className="cyber-muted mt-4  max-w-2xl leading-relaxed">
-          嗨，我是 Altria，一名全栈开发工程师。日常用 TypeScript、Golang 和 Rust 写代码，
-          着迷于 AI 的一切新可能。业余时间喜欢收集各种各样的小裙子，也喜欢折腾软路由和家庭网络，
-          对任何冒头的新技术都保持好奇心。
-        </p>
+    <div className="space-y-16">
+      <section className="grid gap-10 border-b border-[var(--line-soft)] pb-14 lg:grid-cols-[minmax(0,1.35fr)_18rem] lg:items-end">
+        <div className="space-y-6">
+          <p className="text-xs font-medium uppercase tracking-[0.28em] text-[var(--muted-strong)]">
+            Personal blog
+          </p>
+          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight text-[var(--foreground)] sm:text-6xl">
+            写代码、记灵感，也认真过日子。
+          </h1>
+          <p className="max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
+            我是 Altria，做全栈开发，也长期沉迷于 AI、工程细节、家庭网络和那些值得被写下来的新鲜感。
+            这里更像一本持续更新的工作手帐，而不是只摆成果的橱窗。
+          </p>
+          <div className="flex flex-wrap gap-3 text-sm">
+            <Link className="button-primary px-5 py-3 font-medium" href="/writing">
+              开始阅读
+            </Link>
+            <Link className="button-secondary px-5 py-3" href="/register">
+              注册参与评论
+            </Link>
+            <Link className="soft-pill px-4 py-2.5 text-sm font-medium" href="/rss.xml">
+              RSS 订阅
+            </Link>
+          </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+          <div className="surface-card p-5">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-strong)]">已发布</p>
+            <p className="mt-3 text-3xl font-semibold">{publishedPosts.length}</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--muted)]">所有公开文章都会在这里长期归档。</p>
+          </div>
+          <div className="surface-card p-5">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-strong)]">关注主题</p>
+            <p className="mt-3 text-xl font-semibold">Engineering · AI</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--muted)]">也会穿插产品观察和一点生活记录。</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.25fr)_20rem]">
+        <div className="space-y-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--muted-strong)]">
+                Recent writing
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-[2rem]">
+                最近更新
+              </h2>
+            </div>
+            <Link href="/writing" className="text-sm font-medium text-[var(--muted)] hover:text-[var(--accent)]">
+              查看归档
+            </Link>
+          </div>
+          {featuredPost ? <PostCard post={featuredPost} featured /> : null}
+          {secondaryPosts.length > 0 ? (
+            <div className="grid gap-5 md:grid-cols-2">
+              {secondaryPosts.map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </div>
+          ) : null}
+          {publishedPosts.length === 0 ? (
+            <div className="surface-card p-8 text-sm text-[var(--muted)]">
+              还没有已发布文章。等第一篇上线之后，这里会变成一张很完整的阅读首页。
+            </div>
+          ) : null}
+        </div>
+
+        <aside className="space-y-6">
+          <div className="surface-card p-6">
+            <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
+              Popular
+            </p>
+            <ol className="mt-5 space-y-4">
+              {popularPosts.map((post, index) => (
+                <li key={post.slug} className="border-b border-[var(--line-soft)] pb-4 last:border-b-0 last:pb-0">
+                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-strong)]">
+                    0{index + 1}
+                  </p>
+                  <Link href={`/writing/${post.slug}`} className="story-link mt-2 block text-base font-semibold leading-7">
+                    {post.title}
+                  </Link>
+                  <p className="mt-2 text-sm text-[var(--muted)]">{post.readCount} 次阅读</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="surface-card p-6">
+            <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
+              About this place
+            </p>
+            <p className="mt-4 text-sm leading-8 text-[var(--muted)]">
+              我想把这个站点做成一个安静但有温度的个人博客。内容不追求“每篇都像代表作”，更重视持续思考和表达。
+            </p>
+            <p className="mt-4 text-sm leading-8 text-[var(--muted)]">
+              如果你也在折腾 AI、工程、产品，或者只是想偶尔读点真实工作里的感受，欢迎来这里看看。
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section className="grid gap-6 border-t border-[var(--line-soft)] pt-10 md:grid-cols-3">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
+            Writing rhythm
+          </p>
+          <p className="mt-3 text-sm leading-8 text-[var(--muted)]">
+            这里会持续记录工程实践、AI 工具、产品观察，还有一些值得慢慢写下来的日常想法。
+          </p>
+        </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
+            Reading mood
+          </p>
+          <p className="mt-3 text-sm leading-8 text-[var(--muted)]">
+            我希望这里的文章读起来是安静的、完整的，不急着下结论，也不把思考压缩成只有结尾的摘要。
+          </p>
+        </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--muted-strong)]">
+            Small conversations
+          </p>
+          <p className="mt-3 text-sm leading-8 text-[var(--muted)]">
+            如果某篇文章刚好也碰到了你的经验或情绪，欢迎留下几句回应，让这里慢慢长出一点交流感。
+          </p>
+        </div>
       </section>
       <div className="flex flex-wrap gap-3 text-sm">
-        <Link className="cyber-button px-4 py-2 font-semibold tracking-wide" href="/posts">
-          浏览文章
+        <Link className="button-secondary px-4 py-2.5" href="/login">
+          已有账号，去登录
         </Link>
-        <Link className="cyber-button-secondary px-4 py-2" href="/register">
+        <Link className="button-secondary px-4 py-2.5" href="/register">
           注册账号
         </Link>
-        <Link className="cyber-chip px-4 py-2" href="/rss.xml">
-          RSS 订阅
-        </Link>
       </div>
-      <section className="cyber-panel p-6">
-        <h2 className="cyber-title text-xl font-semibold tracking-tight">热门文章</h2>
-        <p className="cyber-muted mt-2 text-sm">按阅读数排序</p>
-        <ul className="mt-5 space-y-3">
-          {hotPosts.length === 0 && <li className="cyber-muted text-sm">暂无已发布文章，稍后再来看看。</li>}
-          {hotPosts.map((post, index) => (
-            <li
-              key={post.postId}
-              className="rounded-xl border border-cyan-400/25 bg-[#0b1329] px-4 py-3 transition hover:border-cyan-300/45"
-            >
-              <Link className="cyber-link text-sm font-semibold" href={`/posts/${post.slug}`}>
-                TOP {index + 1} · {post.title}
-              </Link>
-              <p className="cyber-muted mt-1 text-xs">
-                阅读 {post.readCount} · 发布于{" "}
-                {new Date(post.publishedAt).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
   );
 }

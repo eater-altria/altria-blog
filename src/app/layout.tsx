@@ -16,8 +16,11 @@ const geistMono = Geist_Mono({
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Altria 的部落格",
-  description: "Next.js on Cloudflare Workers + D1",
+  title: {
+    default: "Altria Journal",
+    template: "%s | Altria Journal",
+  },
+  description: "关于工程、AI、创作和生活观察的个人博客。",
 };
 
 export default function RootLayout({
@@ -27,14 +30,28 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="zh-CN"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col text-zinc-100">
+      <body className="min-h-full text-[var(--foreground)]">
         <Nav />
-        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-10 sm:px-6">
-          {children}
-        </main>
+        <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col px-4 sm:px-6">
+          <main className="flex-1 py-10 sm:py-12">{children}</main>
+          <footer className="border-t border-[var(--line-soft)] py-6 text-sm text-[var(--muted)]">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p>Altria Journal</p>
+              <div className="flex flex-wrap items-center gap-4">
+                <a href="/rss.xml" className="story-link">
+                  RSS
+                </a>
+                <a href="/sitemap.xml" className="story-link">
+                  Sitemap
+                </a>
+              </div>
+            </div>
+          </footer>
+        </div>
       </body>
     </html>
   );

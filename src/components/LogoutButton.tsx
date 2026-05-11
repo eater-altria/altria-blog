@@ -12,10 +12,10 @@ export const LogoutButton = () => {
   return (
     <button
       type="button"
-      className="rounded-full border border-fuchsia-400/45 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200 transition hover:border-fuchsia-300 hover:text-white hover:shadow-[0_0_14px_rgba(255,43,214,0.5)]"
+      className="rounded-full border border-[var(--surface-border)] bg-white/55 px-3 py-2 text-xs font-medium text-[var(--muted)] transition hover:border-[var(--line-strong)] hover:bg-white hover:text-[var(--foreground)]"
       onClick={handleClick}
     >
-      Sign out
+      退出登录
     </button>
   );
 };

@@ -16,7 +16,7 @@ function ReadingProgressPortal({ pct }: { pct: number }) {
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[3px]" aria-hidden>
       <div
-        className="h-full rounded-b-sm bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-violet-500 shadow-[0_0_14px_rgba(0,245,255,0.45)]"
+        className="h-full rounded-b-sm bg-[linear-gradient(90deg,#1f6a5d_0%,#6f8d84_55%,#a05d50_100%)]"
         style={{
           transform: `scaleX(${Math.min(100, Math.max(0, pct)) / 100})`,
           transformOrigin: "left center",
@@ -29,10 +29,10 @@ function ReadingProgressPortal({ pct }: { pct: number }) {
 
 function tocLinkTypography(active: boolean) {
   return [
-    "block rounded-md px-1.5 py-1 text-[13px] leading-snug transition-colors focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-cyan-400/90",
+    "block rounded-xl px-2.5 py-2 text-[13px] leading-snug transition-colors focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]",
     active
-      ? "bg-cyan-400/12 text-cyan-100 shadow-[inset_0_0_0_1px_rgba(0,245,255,0.35)]"
-      : "text-cyan-100/72 hover:bg-cyan-400/10 hover:text-cyan-50",
+      ? "bg-[var(--accent-soft)] text-[var(--accent)] shadow-[inset_0_0_0_1px_var(--line-strong)]"
+      : "text-[var(--muted)] hover:bg-white/70 hover:text-[var(--foreground)]",
   ].join(" ");
 }
 
@@ -135,7 +135,7 @@ export function ArticleTocProgress({ toc, proseHtml, proseClassName, children }:
   function renderTocNav(tocNodes: ReactElement[], extraClass?: string) {
     return (
       <nav className={`cyber-panel p-4 ${extraClass ?? ""}`} aria-label="文章目录">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-fuchsia-200/90">目录</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-strong)]">目录</p>
         <ol className="mt-3 max-h-[40vh] list-none space-y-1 overflow-y-auto pr-1 lg:max-h-[calc(100vh-10rem)]">
           {tocNodes}
         </ol>

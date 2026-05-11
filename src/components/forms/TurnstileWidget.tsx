@@ -14,6 +14,7 @@ declare global {
           "expired-callback"?: () => void;
         },
       ) => string;
+      remove?: (id?: string) => void;
       reset: (id?: string) => void;
     };
   }
@@ -27,13 +28,9 @@ interface TurnstileWidgetProps {
 export const TurnstileWidget = ({ siteKey, onTokenChange }: TurnstileWidgetProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const widgetId = useRef<string | null>(null);
-  const [scriptReady, setScriptReady] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.turnstile) {
-      setScriptReady(true);
-    }
-  }, []);
+  const [scriptReady, setScriptReady] = useState(
+    () => typeof window !== "undefined" && Boolean(window.turnstile),
+  );
 
   useEffect(() => {
     if (!siteKey || !scriptReady || !window.turnstile || !ref.current || widgetId.current) {
@@ -44,6 +41,13 @@ export const TurnstileWidget = ({ siteKey, onTokenChange }: TurnstileWidgetProps
       callback: (token) => onTokenChange(token),
       "expired-callback": () => onTokenChange(""),
     });
+    return () => {
+      if (widgetId.current && window.turnstile?.remove) {
+        window.turnstile.remove(widgetId.current);
+      }
+      widgetId.current = null;
+      onTokenChange("");
+    };
   }, [onTokenChange, scriptReady, siteKey]);
 
   if (!siteKey) {

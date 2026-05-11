@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MarkdownEditor } from "@/components/forms/MarkdownEditor";
 
 export const NewPostForm = () => {
   const router = useRouter();
@@ -37,12 +38,15 @@ export const NewPostForm = () => {
 
   return (
     <form className="mt-8 flex flex-col gap-4" onSubmit={handleSubmit}>
-      <textarea
-        className="cyber-input min-h-[320px] p-3 font-mono text-sm"
+      <MarkdownEditor
+        label="Markdown 草稿"
+        aria-label="Markdown 草稿内容"
+        minHeightClassName="min-h-[460px]"
         placeholder={"---\\ntitle: 文章标题\\nslug: article-slug\\n---\\n\\n在这里写 Markdown..."}
         value={markdown}
-        onChange={(e) => setMarkdown(e.target.value)}
+        onChange={setMarkdown}
         required
+        disabled={busy}
       />
       <p className="cyber-muted text-xs">
         可选 YAML frontmatter：<code className="font-mono">title</code>、{" "}
@@ -57,7 +61,7 @@ export const NewPostForm = () => {
         <button
           disabled={busy}
           type="submit"
-          className="cyber-button px-4 py-2 text-sm font-medium disabled:opacity-60"
+          className="cyber-button px-4 py-2.5 text-sm font-medium disabled:opacity-60"
         >
           {busy ? "保存中..." : "保存草稿"}
         </button>

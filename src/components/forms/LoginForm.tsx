@@ -39,14 +39,14 @@ export const LoginForm = () => {
 
   return (
     <form
-      className="cyber-panel mx-auto mt-10 flex w-full max-w-md flex-col gap-4 p-6"
+      className="flex w-full flex-col gap-4"
       onSubmit={handleSubmit}
     >
-      <h1 className="cyber-title text-xl font-semibold">登录</h1>
+      <h2 className="cyber-title text-2xl font-semibold tracking-tight">登录</h2>
       <label className="flex flex-col gap-1 text-sm">
         <span className="cyber-muted">邮箱</span>
         <input
-          className="cyber-input px-3 py-2"
+          className="cyber-input px-4 py-3"
           type="email"
           autoComplete="email"
           value={email}
@@ -57,7 +57,7 @@ export const LoginForm = () => {
       <label className="flex flex-col gap-1 text-sm">
         <span className="cyber-muted">密码</span>
         <input
-          className="cyber-input px-3 py-2"
+          className="cyber-input px-4 py-3"
           type="password"
           autoComplete="current-password"
           value={password}
@@ -73,7 +73,7 @@ export const LoginForm = () => {
       <button
         disabled={loading}
         type="submit"
-        className="cyber-button px-4 py-2 text-sm font-medium disabled:opacity-60"
+        className="cyber-button mt-2 px-4 py-3 text-sm font-medium disabled:opacity-60"
       >
         {loading ? "登录中..." : "立即登录"}
       </button>

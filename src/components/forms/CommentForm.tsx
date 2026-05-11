@@ -44,9 +44,9 @@ export const CommentForm = ({ slug, siteKey }: CommentFormProps) => {
   };
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
       <textarea
-        className="cyber-input min-h-[96px] p-3 text-sm"
+        className="cyber-input min-h-[120px] p-4 text-sm leading-7"
         value={body}
         onChange={(e) => setBody(e.target.value)}
         maxLength={5000}
@@ -59,7 +59,7 @@ export const CommentForm = ({ slug, siteKey }: CommentFormProps) => {
       <button
         disabled={busy || !turnstileToken}
         type="submit"
-        className="cyber-button self-start px-3 py-1 text-xs font-medium disabled:opacity-60"
+        className="cyber-button self-start px-4 py-2 text-xs font-medium disabled:opacity-60"
       >
         {busy ? "发布中..." : "发表评论"}
       </button>

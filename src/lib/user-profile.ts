@@ -1,4 +1,4 @@
-import { AVATAR_ALLOWED_TYPES, AVATAR_MAX_BYTES, USERNAME_RE } from "./constants";
+import { AVATAR_ALLOWED_TYPES, AVATAR_MAX_BYTES, USERNAME_RE } from "./constants.js";
 
 export const normalizeUsername = (value: string) => value.trim();
 

@@ -29,7 +29,7 @@ export default async function AdminEditPostPage({ params }: PageProps) {
           <p className="cyber-muted text-sm">slug: {postRow.slug}</p>
         </div>
         <a
-          href={`/posts/${postRow.slug}`}
+          href={`/writing/${postRow.slug}`}
           className="cyber-link text-sm underline-offset-2 hover:underline"
           target="_blank"
           rel="noreferrer"

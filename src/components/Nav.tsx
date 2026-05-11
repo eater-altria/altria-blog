@@ -6,41 +6,43 @@ export const Nav = async () => {
   const user = await getCurrentUser();
 
   return (
-    <header className="border-b border-cyan-400/20 bg-[#05070d]/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link
-          href="/"
-          className="rounded-full border border-fuchsia-400/40 bg-fuchsia-400/10 px-3 py-1 text-sm font-semibold tracking-[0.22em] text-cyan-200 shadow-[0_0_18px_rgba(255,43,214,0.35)]"
-        >
-          ALTRIA BLOG
+    <header className="sticky top-0 z-30 border-b border-[var(--line-soft)] bg-[rgba(244,239,230,0.86)] backdrop-blur">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <Link href="/" className="flex min-w-0 flex-col">
+          <span className="text-xs font-medium uppercase tracking-[0.28em] text-[var(--muted-strong)]">
+            Altria
+          </span>
+          <span className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
+            Journal
+          </span>
         </Link>
-        <nav className="flex flex-wrap items-center gap-3 text-sm">
-          <Link href="/posts" className="cyber-link">
-            文章
+        <nav className="flex flex-wrap items-center gap-2 text-sm sm:gap-3">
+          <Link href="/writing" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
+            写作
           </Link>
-          <Link href="/rss.xml" className="cyber-link">
+          <Link href="/rss.xml" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
             订阅
           </Link>
           {user?.role === "super_admin" && (
-            <Link href="/admin" className="cyber-chip px-3 py-1 text-xs font-semibold tracking-wide">
+            <Link href="/admin" className="soft-pill px-3 py-1.5 text-xs font-medium">
               管理后台
             </Link>
           )}
           {!user ? (
             <>
-              <Link href="/login" className="cyber-link">
+              <Link href="/login" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
                 登录
               </Link>
-              <Link href="/register" className="cyber-button px-3 py-1.5 text-xs font-semibold tracking-wide">
+              <Link href="/register" className="button-primary px-4 py-2 text-xs font-medium">
                 注册
               </Link>
             </>
           ) : (
             <>
-              <Link href="/me" className="cyber-link text-xs" title="用户中心">
-                用户中心
+              <Link href="/me" className="rounded-full px-3 py-2 text-xs text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]" title="用户中心">
+                我的资料
               </Link>
-              <span className="max-w-[180px] truncate text-xs text-cyan-100/85" title={user.email}>
+              <span className="max-w-[180px] truncate rounded-full border border-[var(--line-soft)] bg-white/50 px-3 py-2 text-xs text-[var(--muted)]" title={user.email}>
                 {user.username ?? user.email}
               </span>
               <LogoutButton />
