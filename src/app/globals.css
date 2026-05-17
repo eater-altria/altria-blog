@@ -2,11 +2,19 @@
 @import "@uiw/react-md-editor/markdown-editor.css";
 @import "@uiw/react-markdown-preview/markdown.css";
 
+/* Theme tokens.
+   Light values live on :root. Dark values are applied via :root[data-theme="dark"],
+   which the inline script in layout.tsx sets before paint (resolving "system" via
+   prefers-color-scheme). The @media block below covers the no-JS / pre-script case. */
 :root {
   --background: #f4efe6;
   --foreground: #1d2430;
+  --on-accent: #fffaf3;
   --surface: rgba(255, 252, 247, 0.86);
   --surface-strong: #fbf7f1;
+  --surface-raised: rgba(255, 255, 255, 0.6);
+  --surface-raised-strong: rgba(255, 255, 255, 0.85);
+  --surface-inset-highlight: rgba(255, 255, 255, 0.85);
   --surface-border: rgba(65, 76, 92, 0.16);
   --line-soft: rgba(63, 72, 87, 0.1);
   --line-strong: rgba(24, 98, 84, 0.28);
@@ -16,6 +24,27 @@
   --accent-soft: rgba(31, 106, 93, 0.1);
   --accent-rose: #a05d50;
   --danger: #b1453d;
+  --prose-body: #2a3444;
+  --nav-bg: rgba(244, 239, 230, 0.86);
+  --btn-primary-hover-bg: #101827;
+  --btn-secondary-bg: rgba(255, 255, 255, 0.66);
+  --btn-secondary-hover-bg: #fffdf8;
+  --input-bg: rgba(255, 255, 255, 0.74);
+  --body-gradient-top: #f8f4ed;
+  --body-gradient-mid: #f3eee4;
+  --body-gradient-bottom: #efe6d7;
+  --body-overlay: rgba(255, 255, 255, 0.54);
+  --grid-line: rgba(25, 31, 43, 0.03);
+  --mermaid-bg: rgba(255, 255, 255, 0.66);
+  --md-pre-bg: #1b2331;
+  --md-pre-fg: #f8fafc;
+  --md-img-bg: rgba(255, 255, 255, 0.48);
+  --md-toolbar-bg: rgba(255, 252, 247, 0.72);
+  --md-content-bg: rgba(255, 255, 255, 0.38);
+  --shadow-card: 0 18px 48px rgba(26, 32, 44, 0.06);
+  --shadow-button-primary: 0 12px 28px rgba(29, 36, 48, 0.18);
+  --shadow-button-secondary: 0 12px 28px rgba(29, 36, 48, 0.05);
+  color-scheme: light;
 }
 
 @theme inline {
@@ -25,10 +54,90 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Explicit dark mode (set by the pre-hydration script in layout.tsx, including
+   when the user picks "system" and the OS reports dark). */
+:root[data-theme="dark"] {
+  --background: #131820;
+  --foreground: #e8ecf3;
+  --on-accent: #0d1117;
+  --surface: rgba(28, 35, 47, 0.78);
+  --surface-strong: #1c232f;
+  --surface-raised: rgba(255, 255, 255, 0.04);
+  --surface-raised-strong: rgba(255, 255, 255, 0.08);
+  --surface-inset-highlight: rgba(255, 255, 255, 0.04);
+  --surface-border: rgba(255, 255, 255, 0.1);
+  --line-soft: rgba(255, 255, 255, 0.06);
+  --line-strong: rgba(105, 200, 180, 0.34);
+  --muted: #9aa4b7;
+  --muted-strong: #c2cad9;
+  --accent: #5ec4af;
+  --accent-soft: rgba(94, 196, 175, 0.12);
+  --accent-rose: #d18879;
+  --danger: #e87a72;
+  --prose-body: #cbd2de;
+  --nav-bg: rgba(19, 24, 32, 0.85);
+  --btn-primary-hover-bg: #ffffff;
+  --btn-secondary-bg: rgba(255, 255, 255, 0.04);
+  --btn-secondary-hover-bg: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --body-gradient-top: #181e28;
+  --body-gradient-mid: #131820;
+  --body-gradient-bottom: #0e131b;
+  --body-overlay: rgba(255, 255, 255, 0.02);
+  --grid-line: rgba(255, 255, 255, 0.03);
+  --mermaid-bg: rgba(255, 255, 255, 0.04);
+  --md-pre-bg: #0c0f15;
+  --md-pre-fg: #e8ecf3;
+  --md-img-bg: rgba(255, 255, 255, 0.04);
+  --md-toolbar-bg: rgba(255, 255, 255, 0.03);
+  --md-content-bg: rgba(255, 255, 255, 0.02);
+  --shadow-card: 0 18px 48px rgba(0, 0, 0, 0.45);
+  --shadow-button-primary: 0 12px 28px rgba(0, 0, 0, 0.45);
+  --shadow-button-secondary: 0 12px 28px rgba(0, 0, 0, 0.25);
+  color-scheme: dark;
+}
+
+/* No-JS fallback: if the inline script never runs, follow the OS scheme. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #f4efe6;
-    --foreground: #1d2430;
+  :root:not([data-theme]) {
+    --background: #131820;
+    --foreground: #e8ecf3;
+    --on-accent: #0d1117;
+    --surface: rgba(28, 35, 47, 0.78);
+    --surface-strong: #1c232f;
+    --surface-raised: rgba(255, 255, 255, 0.04);
+    --surface-raised-strong: rgba(255, 255, 255, 0.08);
+    --surface-inset-highlight: rgba(255, 255, 255, 0.04);
+    --surface-border: rgba(255, 255, 255, 0.1);
+    --line-soft: rgba(255, 255, 255, 0.06);
+    --line-strong: rgba(105, 200, 180, 0.34);
+    --muted: #9aa4b7;
+    --muted-strong: #c2cad9;
+    --accent: #5ec4af;
+    --accent-soft: rgba(94, 196, 175, 0.12);
+    --accent-rose: #d18879;
+    --danger: #e87a72;
+    --prose-body: #cbd2de;
+    --nav-bg: rgba(19, 24, 32, 0.85);
+    --btn-primary-hover-bg: #ffffff;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.04);
+    --btn-secondary-hover-bg: rgba(255, 255, 255, 0.08);
+    --input-bg: rgba(255, 255, 255, 0.04);
+    --body-gradient-top: #181e28;
+    --body-gradient-mid: #131820;
+    --body-gradient-bottom: #0e131b;
+    --body-overlay: rgba(255, 255, 255, 0.02);
+    --grid-line: rgba(255, 255, 255, 0.03);
+    --mermaid-bg: rgba(255, 255, 255, 0.04);
+    --md-pre-bg: #0c0f15;
+    --md-pre-fg: #e8ecf3;
+    --md-img-bg: rgba(255, 255, 255, 0.04);
+    --md-toolbar-bg: rgba(255, 255, 255, 0.03);
+    --md-content-bg: rgba(255, 255, 255, 0.02);
+    --shadow-card: 0 18px 48px rgba(0, 0, 0, 0.45);
+    --shadow-button-primary: 0 12px 28px rgba(0, 0, 0, 0.45);
+    --shadow-button-secondary: 0 12px 28px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
   }
 }
 
@@ -41,14 +150,20 @@ body {
   min-height: 100vh;
   background-color: var(--background);
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0)),
-    linear-gradient(90deg, rgba(25, 31, 43, 0.03) 1px, transparent 1px),
-    linear-gradient(rgba(25, 31, 43, 0.03) 1px, transparent 1px),
-    linear-gradient(180deg, #f8f4ed 0%, #f3eee4 48%, #efe6d7 100%);
+    linear-gradient(180deg, var(--body-overlay), transparent),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(
+      180deg,
+      var(--body-gradient-top) 0%,
+      var(--body-gradient-mid) 48%,
+      var(--body-gradient-bottom) 100%
+    );
   background-attachment: fixed;
   background-size: 100% 100%, 24px 24px, 24px 24px, 100% 100%;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 240ms ease, color 240ms ease;
 }
 
 a {
@@ -64,8 +179,9 @@ a {
   border-radius: 1.25rem;
   background: var(--surface);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.85) inset,
-    0 18px 48px rgba(26, 32, 44, 0.06);
+    0 1px 0 var(--surface-inset-highlight) inset,
+    var(--shadow-card);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -103,9 +219,9 @@ a {
 .cyber-input {
   border: 1px solid var(--surface-border);
   border-radius: 0.95rem;
-  background: rgba(255, 255, 255, 0.74);
+  background: var(--input-bg);
   color: var(--foreground);
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 }
 
 .input-shell::file-selector-button,
@@ -122,7 +238,7 @@ a {
 .cyber-input:focus {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(31, 106, 93, 0.09);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .button-primary,
@@ -133,14 +249,14 @@ a {
   border: 1px solid transparent;
   border-radius: 999px;
   background: var(--foreground);
-  color: #fffaf3;
-  box-shadow: 0 12px 28px rgba(29, 36, 48, 0.18);
+  color: var(--on-accent);
+  box-shadow: var(--shadow-button-primary);
 }
 
 .button-primary:hover,
 .cyber-button:hover {
   transform: translateY(-1px);
-  background: #101827;
+  background: var(--btn-primary-hover-bg);
 }
 
 .button-secondary,
@@ -150,15 +266,15 @@ a {
   justify-content: center;
   border: 1px solid var(--surface-border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.66);
+  background: var(--btn-secondary-bg);
   color: var(--foreground);
-  box-shadow: 0 12px 28px rgba(29, 36, 48, 0.05);
+  box-shadow: var(--shadow-button-secondary);
 }
 
 .button-secondary:hover,
 .cyber-button-secondary:hover {
   border-color: var(--line-strong);
-  background: #fffdf8;
+  background: var(--btn-secondary-hover-bg);
 }
 
 .cyber-danger {
@@ -187,7 +303,7 @@ a {
 .article-prose p,
 .article-prose li,
 .article-prose blockquote {
-  color: #2a3444;
+  color: var(--prose-body);
 }
 
 .blog-md-editor .w-md-editor {
@@ -195,11 +311,12 @@ a {
   border: 1px solid var(--surface-border);
   border-radius: 1rem;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.28)),
+    linear-gradient(180deg, var(--md-content-bg), transparent),
     var(--surface);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.85) inset,
-    0 18px 48px rgba(26, 32, 44, 0.06);
+    0 1px 0 var(--surface-inset-highlight) inset,
+    var(--shadow-card);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: var(--foreground);
   --color-canvas-default: transparent;
@@ -211,7 +328,7 @@ a {
 .blog-md-editor .w-md-editor-toolbar {
   min-height: 2.75rem;
   border-bottom: 1px solid var(--line-soft);
-  background: rgba(255, 252, 247, 0.72);
+  background: var(--md-toolbar-bg);
   padding: 0.45rem 0.55rem;
 }
 
@@ -241,12 +358,12 @@ a {
 .blog-md-editor .w-md-editor-toolbar li > button:focus {
   outline: none;
   background: var(--accent-soft);
-  box-shadow: 0 0 0 3px rgba(31, 106, 93, 0.1);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .blog-md-editor .w-md-editor-toolbar li.active > button {
   background: var(--foreground);
-  color: #fffaf3;
+  color: var(--on-accent);
 }
 
 .blog-md-editor .w-md-editor-toolbar-divider {
@@ -257,14 +374,12 @@ a {
 }
 
 .blog-md-editor .w-md-editor-content {
-  background: rgba(255, 255, 255, 0.38);
+  background: var(--md-content-bg);
 }
 
 .blog-md-editor .w-md-editor-input {
   border-right: 1px solid var(--line-soft);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 252, 247, 0.2)),
-    rgba(255, 255, 255, 0.34);
+  background: var(--md-content-bg);
 }
 
 .blog-md-editor .w-md-editor-text,
@@ -292,7 +407,7 @@ a {
 }
 
 .blog-md-editor .w-md-editor-text-input::selection {
-  background: rgba(31, 106, 93, 0.16);
+  background: var(--accent-soft);
 }
 
 .blog-md-editor .w-md-editor-text-pre .token.title,
@@ -341,7 +456,7 @@ a {
 .blog-md-editor .wmde-markdown p,
 .blog-md-editor .wmde-markdown li,
 .blog-md-editor .wmde-markdown blockquote {
-  color: #2a3444;
+  color: var(--prose-body);
 }
 
 .blog-md-editor .wmde-markdown a {
@@ -357,7 +472,7 @@ a {
 
 .blog-md-editor .wmde-markdown code {
   border-radius: 0.45rem;
-  background: rgba(31, 106, 93, 0.08);
+  background: var(--accent-soft);
   color: var(--foreground);
   padding: 0.1rem 0.35rem;
 }
@@ -366,8 +481,8 @@ a {
   overflow-x: auto;
   border: 1px solid var(--surface-border);
   border-radius: 0.9rem;
-  background: #1b2331;
-  color: #f8fafc;
+  background: var(--md-pre-bg);
+  color: var(--md-pre-fg);
 }
 
 .blog-md-editor .wmde-markdown pre code {
@@ -380,8 +495,8 @@ a {
   max-height: 26rem;
   border: 1px solid var(--surface-border);
   border-radius: 0.9rem;
-  background: rgba(255, 255, 255, 0.48);
-  box-shadow: 0 12px 32px rgba(26, 32, 44, 0.08);
+  background: var(--md-img-bg);
+  box-shadow: var(--shadow-card);
 }
 
 .blog-md-editor .w-md-editor-bar {
@@ -393,6 +508,49 @@ a {
     border-right: 0;
     border-bottom: 1px solid var(--line-soft);
   }
+}
+
+/* ── Mermaid diagrams ──────────────────────────────────────────── */
+.mermaid-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 1.25rem;
+  background: var(--mermaid-bg);
+  overflow-x: auto;
+}
+
+.mermaid-container pre.mermaid {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  box-shadow: none;
+}
+
+.mermaid-container.mermaid-rendered {
+  background: var(--mermaid-bg);
+}
+
+.mermaid-container,
+.mermaid-container * {
+  font-size: revert;
+  line-height: normal;
+}
+
+.mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-container pre.mermaid-error {
+  color: var(--danger);
 }
 
 /* ── Scroll-reveal ─────────────────────────────────────────────── */

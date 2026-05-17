@@ -66,6 +66,50 @@ function MarkdownPreviewImage({
   return <img {...props} alt={alt} src={resolvedSrc} />;
 }
 
+let mermaidIdCounter = 0;
+
+function MermaidBlock({ code }: { code: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const mermaid = (await import("mermaid")).default;
+        if (cancelled) return;
+        mermaid.initialize({ startOnLoad: false, theme: "default" });
+        const id = `mermaid-editor-${++mermaidIdCounter}`;
+        const { svg } = await mermaid.render(id, code);
+        if (!cancelled) {
+          el.innerHTML = svg;
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Mermaid render error");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [code]);
+
+  if (error) {
+    return (
+      <pre className="mermaid-error rounded-lg border border-[var(--danger)] bg-red-50 p-3 text-xs text-[var(--danger)]">
+        <code>{code}</code>
+      </pre>
+    );
+  }
+
+  return <div ref={containerRef} className="mermaid-container" />;
+}
+
 function deriveImageAlt(fileName: string): string {
   const raw = fileName.replace(/\.[^.]+$/, "").trim();
   return raw || "image";
@@ -230,6 +274,14 @@ export function MarkdownEditor({
               img: (props: ComponentPropsWithoutRef<"img">) => (
                 <MarkdownPreviewImage {...props} previewUrls={imagePreviewUrls} />
               ),
+              code: (props: ComponentPropsWithoutRef<"code"> & { node?: unknown }) => {
+                const { children, className, node, ...rest } = props;
+                void node;
+                if (className === "language-mermaid") {
+                  return <MermaidBlock code={String(children).replace(/\n$/, "")} />;
+                }
+                return <code className={className} {...rest}>{children}</code>;
+              },
             },
           }}
           textareaProps={{

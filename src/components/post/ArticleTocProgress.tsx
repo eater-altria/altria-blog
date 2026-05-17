@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type ReactElement, type ReactNode } from "react";
 import type { TocItem } from "@/lib/md-reading-nav";
+import { useMermaidHtml } from "@/components/post/MermaidRenderer";
 
 type Props = {
   toc: TocItem[];
@@ -16,7 +17,7 @@ function ReadingProgressPortal({ pct }: { pct: number }) {
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[3px]" aria-hidden>
       <div
-        className="h-full rounded-b-sm bg-[linear-gradient(90deg,#1f6a5d_0%,#6f8d84_55%,#a05d50_100%)]"
+        className="h-full rounded-b-sm bg-[linear-gradient(90deg,var(--accent)_0%,var(--muted)_55%,var(--accent-rose)_100%)]"
         style={{
           transform: `scaleX(${Math.min(100, Math.max(0, pct)) / 100})`,
           transformOrigin: "left center",
@@ -32,7 +33,7 @@ function tocLinkTypography(active: boolean) {
     "block rounded-xl px-2.5 py-2 text-[13px] leading-snug transition-colors focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]",
     active
       ? "bg-[var(--accent-soft)] text-[var(--accent)] shadow-[inset_0_0_0_1px_var(--line-strong)]"
-      : "text-[var(--muted)] hover:bg-white/70 hover:text-[var(--foreground)]",
+      : "text-[var(--muted)] hover:bg-[var(--surface-raised-strong)] hover:text-[var(--foreground)]",
   ].join(" ");
 }
 
@@ -42,6 +43,7 @@ function collectHeadingTargets(root: HTMLElement, toc: TocItem[]): HTMLElement[]
 }
 
 export function ArticleTocProgress({ toc, proseHtml, proseClassName, children }: Props): ReactElement {
+  const renderedHtml = useMermaidHtml(proseHtml);
   const rootRef = useRef<HTMLElement | null>(null);
   const [activeId, setActiveId] = useState<string | null>(toc[0]?.id ?? null);
   const [readPct, setReadPct] = useState(0);
@@ -168,7 +170,7 @@ export function ArticleTocProgress({ toc, proseHtml, proseClassName, children }:
         }}
         className={proseClassName}
         data-article-prose
-        dangerouslySetInnerHTML={{ __html: proseHtml }}
+        dangerouslySetInnerHTML={{ __html: renderedHtml }}
       />
       {children}
     </div>

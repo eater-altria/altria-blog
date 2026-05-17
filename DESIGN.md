@@ -24,7 +24,7 @@
 | `--accent-rose` | 备用强调（当前少用） |
 | `--danger` | 表单错误、危险操作文案 |
 
-深色方案：`prefers-color-scheme: dark` 下目前与浅色共用同一套变量（可按产品需要再拆暗色盘）。
+深色方案：完整的暗色调色板见 `:root[data-theme="dark"]`。`<html>` 上的 `data-theme` 由 `layout.tsx` 顶部的预水合内联脚本根据 `localStorage.theme`（`light` / `dark` / `system`，缺省 `system`）解析后写入，因此 CSS 只需匹配 `light` 或 `dark` 两个具体值。无 JS 时回退到 `@media (prefers-color-scheme: dark)`。新增颜色时同时为两套主题写入新的令牌，避免页面在切换时出现穿帮的硬编码色值——若需要添加半透明白色叠层等过渡色，请走 `--surface-raised` / `--surface-raised-strong` / `--input-bg` 等已经分别为亮/暗模式定义过的令牌，不要直接写 `bg-white/60` 或 `rgba(255,255,255,…)`。
 
 ## 字体
 

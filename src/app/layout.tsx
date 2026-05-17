@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
@@ -24,6 +24,15 @@ export const metadata: Metadata = {
   description: "关于工程、AI、创作和生活观察的个人博客。",
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+};
+
+// Runs synchronously before any styled content paints. Resolves the stored
+// preference (defaulting to "system") to a concrete data-theme on <html>, so
+// we never flash the light palette to dark-mode users.
+const themeInitScript = `(function(){try{var p=localStorage.getItem('theme')||'system';var d=p==='dark'||(p==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);var r=document.documentElement;r.dataset.theme=d?'dark':'light';r.dataset.themePref=p;}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,8 +43,10 @@ export default function RootLayout({
       lang="zh-CN"
       data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full text-[var(--foreground)]">
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Nav />
         <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col px-4 sm:px-6">
           <main className="flex-1 py-10 sm:py-12">{children}</main>

@@ -45,7 +45,7 @@ export default async function AdminHomePage() {
         </div>
       </div>
       <table className="surface-card w-full overflow-hidden text-sm">
-        <thead className="border-b border-[var(--line-soft)] bg-white/60 text-left">
+        <thead className="border-b border-[var(--line-soft)] bg-[var(--surface-raised)] text-left">
           <tr>
             <th className="px-4 py-2 font-semibold">标题</th>
             <th className="px-4 py-2 font-semibold">Slug</th>

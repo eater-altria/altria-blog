@@ -2,12 +2,13 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/guards";
 import { isStaffRole } from "@/lib/auth/roles";
 import { LogoutButton } from "@/components/LogoutButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Nav = async () => {
   const user = await getCurrentUser();
 
   return (
-    <header className="nav-enter sticky top-0 z-30 border-b border-[var(--line-soft)] bg-[rgba(244,239,230,0.86)] backdrop-blur">
+    <header className="nav-enter sticky top-0 z-30 border-b border-[var(--line-soft)] bg-[var(--nav-bg)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="flex min-w-0 flex-col">
           <span className="text-xs font-medium uppercase tracking-[0.28em] text-[var(--muted-strong)]">
@@ -18,12 +19,13 @@ export const Nav = async () => {
           </span>
         </Link>
         <nav className="flex flex-wrap items-center gap-2 text-sm sm:gap-3">
-          <Link href="/writing" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
+          <Link href="/writing" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--foreground)]">
             写作
           </Link>
-          <Link href="/rss.xml" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
+          <Link href="/rss.xml" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--foreground)]">
             订阅
           </Link>
+          <ThemeToggle />
           {user && isStaffRole(user.role) && (
             <Link href="/admin" className="soft-pill px-3 py-1.5 text-xs font-medium">
               管理后台
@@ -31,7 +33,7 @@ export const Nav = async () => {
           )}
           {!user ? (
             <>
-              <Link href="/login" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]">
+              <Link href="/login" className="rounded-full px-3 py-2 text-[var(--muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--foreground)]">
                 登录
               </Link>
               <Link href="/register" className="button-primary px-4 py-2 text-xs font-medium">
@@ -40,10 +42,10 @@ export const Nav = async () => {
             </>
           ) : (
             <>
-              <Link href="/me" className="rounded-full px-3 py-2 text-xs text-[var(--muted)] hover:bg-white/60 hover:text-[var(--foreground)]" title="用户中心">
+              <Link href="/me" className="rounded-full px-3 py-2 text-xs text-[var(--muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--foreground)]" title="用户中心">
                 我的资料
               </Link>
-              <span className="max-w-[180px] truncate rounded-full border border-[var(--line-soft)] bg-white/50 px-3 py-2 text-xs text-[var(--muted)]" title={user.email}>
+              <span className="max-w-[180px] truncate rounded-full border border-[var(--line-soft)] bg-[var(--surface-raised)] px-3 py-2 text-xs text-[var(--muted)]" title={user.email}>
                 {user.username ?? user.email}
               </span>
               <LogoutButton />

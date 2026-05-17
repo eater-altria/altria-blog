@@ -45,7 +45,7 @@ export const CommentEmojiPicker = ({ onInsert, disabled }: CommentEmojiPickerPro
         aria-haspopup="dialog"
         aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((v) => !v)}
-        className="soft-pill px-3 py-1.5 text-xs font-medium text-[var(--foreground)] transition-opacity hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-50"
+        className="soft-pill px-3 py-1.5 text-xs font-medium text-[var(--foreground)] transition-opacity hover:bg-[var(--surface-raised)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span aria-hidden className="text-base leading-none">
           😊

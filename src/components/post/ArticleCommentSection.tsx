@@ -45,8 +45,8 @@ function CommentBranch({
       id={`comment-${node.id}`}
       className={
         depth > 0
-          ? "mt-3 rounded-[1.2rem] border border-[var(--line-soft)] bg-white/40 p-4 sm:ml-6 sm:border-l-2 sm:border-l-[var(--accent)]/35 sm:pl-5"
-          : "rounded-[1.2rem] border border-[var(--surface-border)] bg-white/55 p-5"
+          ? "mt-3 rounded-[1.2rem] border border-[var(--line-soft)] bg-[var(--surface-raised)] p-4 sm:ml-6 sm:border-l-2 sm:border-l-[var(--accent)]/35 sm:pl-5"
+          : "rounded-[1.2rem] border border-[var(--surface-border)] bg-[var(--surface-raised)] p-5"
       }
     >
       {parentLabel ? (
@@ -74,7 +74,7 @@ function CommentBranch({
               onClick={() =>
                 onReply({ id: node.id, username: (node.username ?? "匿名用户").trim() || "匿名用户" })
               }
-              className="rounded-full border border-[var(--line-strong)] bg-white/70 px-3 py-1 text-xs font-medium text-[var(--accent)] transition-colors hover:bg-[var(--accent-soft)]"
+              className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-raised-strong)] px-3 py-1 text-xs font-medium text-[var(--accent)] transition-colors hover:bg-[var(--accent-soft)]"
             >
               回复
             </button>
@@ -84,7 +84,7 @@ function CommentBranch({
               type="button"
               disabled={deletingId === node.id}
               onClick={() => onDelete(node.id)}
-              className="rounded-full border border-[var(--danger)]/35 bg-white/70 px-3 py-1 text-xs font-medium text-[var(--danger)] transition-colors hover:bg-[rgba(177,69,61,0.08)] disabled:opacity-50"
+              className="rounded-full border border-[var(--danger)]/35 bg-[var(--surface-raised-strong)] px-3 py-1 text-xs font-medium text-[var(--danger)] transition-colors hover:bg-[color-mix(in_oklab,var(--danger)_12%,transparent)] disabled:opacity-50"
             >
               {deletingId === node.id ? "删除中…" : "删除"}
             </button>

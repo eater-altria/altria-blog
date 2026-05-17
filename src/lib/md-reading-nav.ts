@@ -1,3 +1,4 @@
+import { escape as escapeHtml } from "html-escaper";
 import { Marked, type RendererThis, type Tokens } from "marked";
 
 export type TocItem = {
@@ -88,6 +89,12 @@ export async function parseMarkdownBodyWithAnchors(markdown: string): Promise<{ 
         index += 1;
         const inner = this.parser.parseInline(token.tokens);
         return `<h${token.depth} id="${escapeHtmlAttr(id)}">${inner}</h${token.depth}>\n`;
+      },
+      code(token: Tokens.Code): string | false {
+        if (token.lang === "mermaid") {
+          return `<div class="mermaid-container"><pre class="mermaid">${escapeHtml(token.text)}</pre></div>\n`;
+        }
+        return false;
       },
     },
   });
