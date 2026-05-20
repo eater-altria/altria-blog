@@ -306,6 +306,15 @@ a {
   color: var(--prose-body);
 }
 
+.article-reader-highlight {
+  background: linear-gradient(90deg, var(--accent-soft), transparent 85%);
+  border-left: 2px solid var(--accent);
+  padding-left: 0.75rem;
+  margin-left: -0.95rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
 .blog-md-editor .w-md-editor {
   overflow: hidden;
   border: 1px solid var(--surface-border);

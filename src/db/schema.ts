@@ -58,5 +58,12 @@ export const comments = sqliteTable("comments", {
   createdAt: integer("created_at").notNull(),
 });
 
+/** Fixed-window rate-limit counters for `/api/tts`. Bucket key encodes subject + window. */
+export const ttsRateLimit = sqliteTable("tts_rate_limit", {
+  bucketKey: text("bucket_key").primaryKey(),
+  count: integer("count").notNull().default(0),
+  windowStart: integer("window_start").notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Post = typeof posts.$inferSelect;

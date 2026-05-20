@@ -33,6 +33,9 @@
 	"vars": {
 		"NEXT_PUBLIC_SITE_URL": "https://docs.altriayu.uk",
 		"NEXT_PUBLIC_AVATAR_BASE_URL": "https://images.altriayu.uk",
-		"NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADLZOZvW8KMVlc93"
+		"NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADLZOZvW8KMVlc93",
+		"DOUBAO_TTS_RESOURCE_ID": "seed-tts-2.0",
+		"DOUBAO_TTS_VOICE": "zh_female_cancan_uranus_bigtts",
+		"DOUBAO_TTS_ENABLED": "true"
 	}
 }

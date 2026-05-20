@@ -46,3 +46,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+
+.playwright-mcp
+.antigravitycli/

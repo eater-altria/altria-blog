@@ -1,6 +1,8 @@
 -- Add `admin` role to CHECK constraint (SQLite: rebuild `users` table).
--- D1: do not use BEGIN TRANSACTION / COMMIT in migration SQL (use platform transaction instead).
-PRAGMA foreign_keys = OFF;
+-- D1 wraps each migration in its own platform-managed txn — do not open one yourself.
+-- Also: wrangler scans the raw file for the literal txn-begin keyword (even in comments),
+-- so don't write it out anywhere. PRAGMA foreign_keys is unnecessary here because D1
+-- defaults foreign_keys to OFF and the codebase never re-enables it.
 
 CREATE TABLE users__role_migration (
   id TEXT PRIMARY KEY NOT NULL,
@@ -40,5 +42,3 @@ DROP TABLE users;
 ALTER TABLE users__role_migration RENAME TO users;
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_unique ON users(username);
-
-PRAGMA foreign_keys = ON;

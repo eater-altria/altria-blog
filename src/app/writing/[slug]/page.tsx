@@ -13,6 +13,7 @@ import {
 } from "@/lib/post-engagement";
 import { markdownToTrustedArticle } from "@/lib/render-post";
 import { ArticleTocProgress } from "@/components/post/ArticleTocProgress";
+import { ArticleReader } from "@/components/post/ArticleReader";
 import { ArticleCommentSection } from "@/components/post/ArticleCommentSection";
 import { Reveal } from "@/components/motion/Reveal";
 import { getSkipCommentTurnstileForUser } from "@/lib/comment-turnstile-bypass-rsc";
@@ -88,7 +89,10 @@ export default async function WritingDetailPage({ params }: PageProps) {
         <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight text-[var(--foreground)] sm:text-5xl">
           {postRow.title}
         </h1>
-        <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{engagementSummary}</p>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm leading-7 text-[var(--muted)]">{engagementSummary}</p>
+          <ArticleReader slug={slug} />
+        </div>
       </Reveal>
 
       <ArticleTocProgress
